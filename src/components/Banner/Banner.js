@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHref } from "react-router-dom";
 import Slider from "react-slick";
 import {
   bannerImgOne,
@@ -159,7 +159,7 @@ const Banner = () => {
       buttonText: "Shop Now",
     },
     {
-      imgSrc: bannerImgOne,
+      imgSrc: bannerImgTwo,
       text: "Quality Printing Solutions",
       Subtext:
         "Discover our wide range of printers and consumables designed for professional printing needs.",
@@ -167,7 +167,7 @@ const Banner = () => {
       buttonText: "About-us",
     },
     {
-      imgSrc: bannerImgOne,
+      imgSrc: bannerImgThree,
       text: "Efficiency Redefined",
       Subtext:
         "Maximize productivity with our advanced printers and high-quality consumables. ",

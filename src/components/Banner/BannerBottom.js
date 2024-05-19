@@ -52,9 +52,9 @@ const BannerBottom = () => {
               ></path>
             </svg>
           </span>
-          <p className="text-xl text-lightText text-base">
+          <p className="text-lightText text-base">
             Free shipping <br />{" "}
-            <span className="text-xs text-lightText text-base">
+            <span className="text-lightText text-base">
               Free Shipping World Wide
             </span>
           </p>
