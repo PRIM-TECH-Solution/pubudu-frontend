@@ -16,19 +16,24 @@ const Category = () => {
   const category = [
     {
       _id: 9006,
-      title: "Imprimante",
+      title: "Music",
     },
     {
       _id: 9007,
-      title: "Encre",
+      title: "Concert",
     },
     {
       _id: 9008,
-      title: "Ruban",
+      title: "Drama",
     },
     {
       _id: 9009,
-      title: "Bac de dechet",
+      title: "Exhibitions",
+    },
+
+    {
+      _id: 9010,
+      title: "Sports",
     },
   ];
 

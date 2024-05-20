@@ -15,9 +15,9 @@
 
 /* ============= NavLink active Start here ============== */
 nav .active li {
-  color: black;
+  color: #FFA31A;
   font-weight: 600;
-  text-decoration: 1px underline black;
+  text-decoration: 1px underline #FFA31A;
 }
 
 @media screen and (max-width: 665px) {

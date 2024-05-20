@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaFacebook, FaYoutube, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaFacebook, FaYoutube, FaLinkedin, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import FooterListTitle from "./FooterListTitle";
 import { paymentCard } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
@@ -32,7 +32,7 @@ const Footer = () => {
     <div className="w-full bg-[#1E1E1E] py-20 text-white">
       <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 px-4 gap-10">
         <div className="col-span-2">
-          <FooterListTitle title=" More about EasyTicket.LK"/>
+          <FooterListTitle title="EasyTicket.LK" />
           <div className="flex flex-col gap-6">
             <p className="text-base w-full xl:w-[80%]">
               Streamlined ticket booking for a world of experiences. From concerts to sports, our platform ensures hassle-free access. Your journey to unforgettable moments begins with us. Discover, book, and enjoy!
@@ -43,9 +43,9 @@ const Footer = () => {
                   <FaYoutube />
                 </li>
               </a>
-              <a href="https://github.com/" target="_blank" rel="noreferrer">
+              <a href="https://instagram.com/" target="_blank" rel="noreferrer">
                 <li className="w-7 h-7 bg-primeColor text-gray-100 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
-                  <FaGithub />
+                  <FaInstagram />
                 </li>
               </a>
               <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
@@ -62,22 +62,19 @@ const Footer = () => {
           </div>
         </div>
         <div>
-          <FooterListTitle title="Shop" />
-          <ul className="flex flex-col gap-2">
-            <li className="font-titleFont text-base hover:text-gray-300 hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Accesories
+        <FooterListTitle title="Contact Us" />
+          <ul className="flex flex-col gap-4">
+            <li className="flex items-center gap-2 text-base font-titleFont hover:text-gray-300 cursor-pointer duration-300">
+              <FaMapMarkerAlt />
+              <span>Hapugala,Galle</span>
             </li>
-            <li className="font-titleFont text-base hover:text-gray-300 hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Clothes
+            <li className="flex items-center gap-2 text-base font-titleFont hover:text-gray-300 cursor-pointer duration-300">
+              <FaPhoneAlt />
+              <span>+123 456 7890</span>
             </li>
-            <li className="font-titleFont text-base hover:text-gray-300 hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Electronics
-            </li>
-            <li className="font-titleFont text-base hover:text-gray-300 hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Home appliances
-            </li>
-            <li className="font-titleFont text-base hover:text-gray-300 hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              New Arrivals
+            <li className="flex items-center gap-2 text-base font-titleFont hover:text-gray-300 cursor-pointer duration-300">
+              <FaEnvelope />
+              <span>info@easyticket.lk</span>
             </li>
           </ul>
         </div>

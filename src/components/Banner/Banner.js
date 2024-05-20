@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, /*useHref*/ } from "react-router-dom";
+//import { Link, /*useHref*/ } from "react-router-dom";
 import Slider from "react-slick";
 import {
   bannerImgOne,
@@ -8,11 +8,11 @@ import {
 } from "../../assets/images";
 import Image from "../designLayouts/Image";
 
-const CustomSlide = ({ Subtext, imgSrc, text, buttonLink, buttonText }) => (
+const CustomSlide = ({ Subtext, imgSrc, text }) => (
   <div
     style={{
       position: "relative",
-      backgroundColor: "#F5F5F3", // Gray background color
+      backgroundColor: "#FFFFFF", // Gray background color
       display: "flex",
       justifyContent: "center",
       alignItems: "center", // Center vertically
@@ -44,11 +44,11 @@ const CustomSlide = ({ Subtext, imgSrc, text, buttonLink, buttonText }) => (
         {Subtext}
       </p>
 
-      <Link to="/about">
+      {/* <Link to="/about">
         <button className="bg-primeColor text-white text-lg font-bodyFont w-[185px] h-[50px] hover:bg-black duration-300 font-bold">
           {buttonText}
         </button>
-      </Link>
+      </Link> */}
     </div>
     <div style={{ marginLeft: "100px" }}>
       <Image imgSrc={imgSrc} />
@@ -152,31 +152,29 @@ const Banner = () => {
   const slides = [
     {
       imgSrc: bannerImgOne,
-      text: "Enhance Your Printing Experience",
+      text: "Discover latest events in Sri Lanka",
       Subtext:
-        "Explore our premium printers and consumables for exceptional results",
-      buttonLink: "/offer",
-      buttonText: "Shop Now",
+        "Explore the latest events in Sri Lanka and get your tickets instantly with our E-Ticket booking system. Scan QR codes at events for seamless entry.",
+      
     },
     {
       imgSrc: bannerImgTwo,
-      text: "Quality Printing Solutions",
+      text: "Grab Your E Ticket Now",
       Subtext:
-        "Discover our wide range of printers and consumables designed for professional printing needs.",
-      buttonLink: "/shop",
-      buttonText: "About-us",
+        "Secure your E-Tickets swiftly with our advanced booking system. Scan QR codes at events for quick and hassle-free entry.",
+     
     },
     {
       imgSrc: bannerImgThree,
-      text: "Efficiency Redefined",
+      text: "Enjoy Your Event",
       Subtext:
-        "Maximize productivity with our advanced printers and high-quality consumables. ",
-      buttonLink: "/contact",
-      buttonText: "Contact-us",
+        "Make the most out of your events with our efficient E-Ticket booking system. Scan QR codes for easy access to your favorite experiences.",
+      
     },
-
-    // Add more slides as needed
   ];
+  
+    // Add more slides as needed
+  
   return (
     <div className="w-full bg-white">
       <Slider {...settings}>
