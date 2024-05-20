@@ -1,16 +1,16 @@
 import {
-  spfOne,
-  spfTwo,
-  spfThree,
-  spfFour,
-  bestSellerOne,
-  bestSellerTwo,
-  bestSellerThree,
-  bestSellerFour,
-  newArrOne,
-  newArrTwo,
-  newArrThree,
-  newArrFour,
+  // spfOne,
+  // spfTwo,
+  // spfThree,
+  // spfFour,
+  // bestSellerOne,
+  // bestSellerTwo,
+  // bestSellerThree,
+  // bestSellerFour,
+  // newArrOne,
+  // newArrTwo,
+  // newArrThree,
+  // newArrFour,
   imprimante1,
   imprimante2,
   imprimante4,
@@ -64,7 +64,7 @@ export const navBarList = [
   },
   {
     _id: 1002,
-    title: "Shop",
+    title: "Events",
     link: "/shop",
   },
   {
@@ -77,11 +77,11 @@ export const navBarList = [
     title: "Contact",
     link: "contact",
   },
-  {
-    _id: 1005,
-    title: "Journal",
-    link: "/journal",
-  },
+  // {
+  //   _id: 1005,
+  //   title: "Journal",
+  //   link: "/journal",
+  // },
 ];
 // =================== NavBarList End here ======================
 // =================== Special Offer data Start here ============
