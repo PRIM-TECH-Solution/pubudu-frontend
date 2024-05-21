@@ -46,8 +46,9 @@ const Brand = () => {
         onClick={() => setShowBrands(!showBrands)}
         className="cursor-pointer"
       >
-        <NavTitle title="Shop by Brand" icons={true} />
+        <NavTitle title="Shop by Category" icons={true} /> 
       </div>
+      {/* category = brand */}
       {showBrands && (
         <motion.div
           initial={{ y: -20, opacity: 0 }}

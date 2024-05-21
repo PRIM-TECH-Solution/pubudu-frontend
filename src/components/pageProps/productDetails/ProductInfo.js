@@ -87,9 +87,9 @@ const ProductInfo = ({ productInfo }) => {
         </svg>
       </div>
 
-      <p className="text-base text-green-600 font-medium">En Stock</p>
+      {/* <p className="text-base text-green-600 font-medium">En Stock</p> */}
       <p className="font-medium text-lg">
-        <span className="font-normal">Colors:</span> {productInfo.color}
+        <span className="font-normal">Category:</span> {productInfo.color}
       </p>
       <button
         onClick={() =>
@@ -107,12 +107,12 @@ const ProductInfo = ({ productInfo }) => {
         }
         className="w-full py-4 bg-blue-500 hover:bg-blue-600 duration-300 text-white text-lg font-titleFont"
       >
-        Add to Cart
+        Book Your Ticket
       </button>
-      <p className="font-normal text-sm">
+      {/* <p className="font-normal text-sm">
         <span className="text-base font-medium"> Categories:</span> Spring
         collection, Streetwear, Women Tags: featured SKU: N/A
-      </p>
+      </p> */}
     </div>
   );
 };
