@@ -32,6 +32,11 @@ import {
 
 import "./style.css";
 
+
+
+
+
+
 // =================== NavBarList Start here ====================
 export const navBarList = [
   {
@@ -269,6 +274,8 @@ export const SplOfferData = [
 // =================== PaginationItems Start here ===============
 
 export const paginationItems = [
+
+  
   {
     _id: "201",
     img: IMPRIMANTE_PANTUM_CP2200DW,

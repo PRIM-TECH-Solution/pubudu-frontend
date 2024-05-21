@@ -1,3 +1,4 @@
+// src/App.js
 import {
   createBrowserRouter,
   RouterProvider,
@@ -24,6 +25,7 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Shop from "./pages/Shop/Shop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MainComponent from "./components/home/Products/MainComponent"; // Import MainComponent
 
 const Layout = () => {
   return (
@@ -50,6 +52,7 @@ const Layout = () => {
     </div>
   );
 };
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -65,6 +68,7 @@ const router = createBrowserRouter(
         <Route path="/product/:_id" element={<ProductDetails />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
         <Route path="/paymentgateway" element={<Payment />}></Route>
+        <Route path="/products" element={<MainComponent />}></Route> {/* New Route */}
       </Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
