@@ -105,11 +105,11 @@ const Header = () => {
                           transition={{ duration: 0.4 }}
                           className="text-sm flex flex-col gap-1"
                         >
-                          <li className="headerSedenavLi text-white">New Arrivals</li>
-                          <li className="headerSedenavLi text-white">Gudgets</li>
-                          <li className="headerSedenavLi text-white">Accessories</li>
-                          <li className="headerSedenavLi text-white">Electronics</li>
-                          <li className="headerSedenavLi text-white">Others</li>
+                          <li className="headerSedenavLi text-white">Music</li>
+                          <li className="headerSedenavLi text-white">Concerts</li>
+                          <li className="headerSedenavLi text-white">Drama</li>
+                          <li className="headerSedenavLi text-white">Exhibition</li>
+                          <li className="headerSedenavLi text-white">Sports</li>
                         </motion.ul>
                       )}
                     </div>
@@ -128,11 +128,11 @@ const Header = () => {
                           transition={{ duration: 0.4 }}
                           className="text-sm flex flex-col gap-1"
                         >
-                          <li className="headerSedenavLi text-white">New Arrivals</li>
-                          <li className="headerSedenavLi text-white">Gudgets</li>
-                          <li className="headerSedenavLi text-white">Accessories</li>
-                          <li className="headerSedenavLi text-white">Electronics</li>
-                          <li className="headerSedenavLi text-white">Others</li>
+                          <li className="headerSedenavLi text-white">Music</li>
+                          <li className="headerSedenavLi text-white">Concerts</li>
+                          <li className="headerSedenavLi text-white">Drama</li>
+                          <li className="headerSedenavLi text-white">Exhibition</li>
+                          <li className="headerSedenavLi text-white">Sports</li>
                         </motion.ul>
                       )}
                     </div>

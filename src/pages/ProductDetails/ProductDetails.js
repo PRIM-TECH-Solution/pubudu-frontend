@@ -6,8 +6,8 @@ import { FaDownload } from "react-icons/fa";
 
 const tabs = [
   {
-    id: "Fiche Technique",
-    label: "Fiche Technique",
+    id: "EasyTicket.LK",
+    label: "EasyTicket.LK",
   },
   {
     id: "Description",
