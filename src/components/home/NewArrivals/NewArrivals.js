@@ -77,10 +77,13 @@ const NewArrivals = () => {
               _id={index}
               img={event.flyerLink}
               productName={event.eventName}
-              location={event.eventTime}
+              location={event.eventLocation}
               color={event.eventCategory}
-              des={event.eventLocation}
+              des={event.eventDescription}
+              time={event.eventTime}
+              ticketDetails={event.ticketDetails}
               badge={true}
+
             />
           </div>
         ))}

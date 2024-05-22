@@ -28,16 +28,18 @@ const ProductInfo = ({ productInfo, dispatch }) => {
     <div className="flex flex-col gap-5">
       <h2 className="text-4xl font-semibold">{productInfo.productName}</h2>
       <p className="text-2xl font-semibold">
-        {productInfo.price} Dt
-        <span className="text-xl font-semibold line-through ml-2">540</span>
-        <span className="text-xs ml-2 inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white">
+        {productInfo.ticketdetails} 
+        {/* <span className="text-xl font-semibold line-through ml-2">540</span> */}
+        {/* <span className="text-xs ml-2 inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white">
           Save 100
-        </span>
+        </span> */}
+        <span className="text-lg ml-2">Location: {productInfo.location}</span>
       </p>
+      
       <hr />
       <p className="text-base text-gray-600">{renderDescription()}</p>
       <div className="flex items-center">
-        <p className="text-sm mr-2"> leave a review </p>
+        <p className="text-sm mr-2"> Ratings </p>
         {[...Array(4)].map((_, index) => (
           <svg
             key={index}
@@ -72,9 +74,12 @@ const ProductInfo = ({ productInfo, dispatch }) => {
               name: productInfo.productName,
               quantity: 1,
               image: productInfo.img,
+              description: productInfo.des,
               badge: productInfo.badge,
               price: productInfo.price,
               colors: productInfo.color,
+              time: productInfo.time,
+              location: productInfo.location,
             })
           )
         }

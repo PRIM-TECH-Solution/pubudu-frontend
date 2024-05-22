@@ -1,4 +1,3 @@
-// src/App.js
 import {
   createBrowserRouter,
   RouterProvider,

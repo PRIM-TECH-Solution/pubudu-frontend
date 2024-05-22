@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BsSuitHeartFill } from "react-icons/bs";
-import { GiReturnArrow } from "react-icons/gi";
+//import { GiReturnArrow } from "react-icons/gi";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdOutlineLabelImportant } from "react-icons/md";
 import Image from "../../designLayouts/Image";
@@ -62,6 +62,7 @@ const Product = (props) => {
                     badge: props.badge,
                     price: props.price,
                     colors: props.color,
+                    time:props.time
                   })
                 )
               }

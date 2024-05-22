@@ -1,58 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
 import { useSelector } from "react-redux";
-import { paginationItems } from "../../../constants";
-
-const items = paginationItems;
-
-function Items({ currentItems, selectedBrands, selectedCategories }) {
-  // Filter items based on selected brands and categories
-  const filteredItems = currentItems.filter((item) => {
-    const isBrandSelected =
-      selectedBrands.length === 0 ||
-      selectedBrands.some((brand) => brand.title === item.brand);
-
-    const isCategorySelected =
-      selectedCategories.length === 0 ||
-      selectedCategories.some((category) => category.title === item.cat);
-
-    return isBrandSelected && isCategorySelected;
-  });
-
-  return (
-    <>
-      {filteredItems.map((item) => (
-        <div key={item._id} className="w-full">
-          <Product
-            _id={item._id}
-            img={item.img}
-            productName={item.productName}
-            price={item.price}
-            color={item.color}
-            badge={item.badge}
-            des={item.des}
-            pdf={item.pdf}
-            ficheTech={item.ficheTech}
-          />
-        </div>
-      ))}
-    </>
-  );
-}
+import axios from "axios";
 
 const Pagination = ({ itemsPerPage }) => {
+  const [response, setResponses] = useState([]);
+  const [events, setEvents] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const [itemStart, setItemStart] = useState(1);
 
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = items.slice(itemOffset, endOffset);
+  const getData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/eventcards/getAll");
+      setResponses(response.data);
+      if (response.data != null) {
+        const event = response.data.map((e) => ({
+          eventName: e.eventName,
+          eventDate: e.eventDate,
+          eventTime: e.eventTime,
+          eventLocation: e.eventLocation,
+          eventDescription: e.eventDescription,
+          ticketDetails: e.ticketDetails,
+          eventCategory: e.eventCategory,
+          flyerLink: e.flyerLink,
+        }));
+        setEvents(event);
+      }
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const items = events;
+
+  function Items({ currentItems, selectedBrands, selectedCategories }) {
+    // Filter items based on selected brands and categories
+    const filteredItems = currentItems.filter((item) => {
+      const isBrandSelected =
+        selectedBrands.length === 0 ||
+        selectedBrands.some((brand) => brand.title === item.brand);
+
+      const isCategorySelected =
+        selectedCategories.length === 0 ||
+        selectedCategories.some((category) => category.title === item.cat);
+
+      return isBrandSelected && isCategorySelected;
+    });
+
+    return (
+      <>
+        {filteredItems.map((event, index) => (
+          <div className="px-2" key={index}>
+            <Product
+              _id={index}
+              img={event.flyerLink}
+              productName={event.eventName}
+              location={event.eventLocation}
+              color={event.eventCategory}
+              des={event.eventDescription}
+              time={event.eventTime}
+              ticketDetails={event.ticketDetails}
+              //badge={true}
+            />
+          </div>
+        ))}
+      </>
+    );
+  }
+
   const selectedBrands = useSelector(
     (state) => state.orebiReducer.checkedBrands
   );
   const selectedCategories = useSelector(
     (state) => state.orebiReducer.checkedCategorys
   );
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
   const handlePageClick = (event) => {
@@ -87,7 +115,7 @@ const Pagination = ({ itemsPerPage }) => {
         />
 
         <p className="text-base font-normal text-lightText">
-          Products from {itemStart} to {Math.min(endOffset, items.length)} of{" "}
+          Events from {itemStart} to {Math.min(endOffset, items.length)} of{" "}
           {items.length}
         </p>
         <button onClick={() => console.log(selectedBrands)}> test</button>
