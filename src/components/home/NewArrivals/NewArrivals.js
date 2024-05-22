@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  newArrOne,
-  newArrTwo,
-  newArrThree,
-  newArrFour,
-} from "../../../assets/images/index";
 import SampleNextArrow from "./SampleNextArrow";
 import SamplePrevArrow from "./SamplePrevArrow";
+import axios from "axios";
 
 const NewArrivals = () => {
+  const [responces, setResponce] = useState([]);
+  const [events, setEvents] = useState([]);
+  const getData = async () => {
+    // Chage the API end point of retriving the recent events
+    const responce = await axios.get("http://localhost:8080/eventcards/getAll");
+    setResponce(responce.data);
+    console.log(responces.length);
+    if (responce.data != null) {
+      const event = responce.data.map((e) => ({
+        eventName: e.eventName,
+        eventDate: e.eventDate,
+        eventTime: e.eventTime,
+        eventLocation: e.eventLocation,
+        eventDescription: e.eventDescription,
+        ticketDetails: e.ticketDetails,
+        eventCategory: e.eventCategory,
+        flyerLink: e.flyerLink,
+      }));
+      setEvents(event);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
+
   const settings = {
     infinite: true,
     speed: 500,
@@ -50,61 +71,19 @@ const NewArrivals = () => {
     <div className="w-full pb-16">
       <Heading heading="Latest Events" />
       <Slider {...settings}>
-        <div className="px-2">
-          <Product
-            _id="100001"
-            img={newArrOne}
-            productName="Round Table Clock"
-            price="44.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100002"
-            img={newArrTwo}
-            productName="Smart Watch"
-            price="250.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100003"
-            img={newArrThree}
-            productName="cloth Basket"
-            price="80.00"
-            color="Mixed"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100004"
-            img={newArrFour}
-            productName="Funny toys for babies"
-            price="60.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100005"
-            img={newArrTwo}
-            productName="Funny toys for babies"
-            price="60.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
+        {events.map((event, index) => (
+          <div className="px-2" key={index}>
+            <Product
+              _id={index}
+              img={event.flyerLink}
+              productName={event.eventName}
+              location={event.eventTime}
+              color={event.eventCategory}
+              des={event.eventLocation}
+              badge={true}
+            />
+          </div>
+        ))}
       </Slider>
     </div>
   );
