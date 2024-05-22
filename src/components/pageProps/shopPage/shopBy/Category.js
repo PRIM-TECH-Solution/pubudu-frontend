@@ -20,7 +20,7 @@ const Category = () => {
     },
     {
       _id: 9007,
-      title: "Concert",
+      title: "Concerts",
     },
     {
       _id: 9008,
@@ -28,7 +28,7 @@ const Category = () => {
     },
     {
       _id: 9009,
-      title: "Exhibitions",
+      title: "Exhibition",
     },
 
     {
@@ -43,7 +43,7 @@ const Category = () => {
 
   return (
     <div className="w-full">
-      <NavTitle title="Shop by Category" icons={true} />
+      <NavTitle title="Browse by Category" icons={true} />
       <div>
         <ul className="flex flex-col gap-4 text-sm lg:text-base text-[#767676]">
           {category.map((item) => (

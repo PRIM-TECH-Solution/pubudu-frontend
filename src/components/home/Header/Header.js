@@ -33,7 +33,9 @@ const Header = () => {
         <Flex className="flex items-center justify-between h-full">
           <Link to="/">
             <div>
-              <Image className="w-32 object-cover" imgSrc={logo} />
+            <h1 className="font-titleFont text-3xl font-medium text-white">
+              EasyTicket.LK
+            </h1>
             </div>
           </Link>
           <div>

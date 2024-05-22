@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { logoLight } from "../../assets/images";
+//import { logoLight } from "../../assets/images";
 
 const SignIn = () => {
   // ============= Initial State Start here =============
@@ -48,7 +48,9 @@ const SignIn = () => {
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
         <div className="w-[450px] h-full bg-primeColor px-10 flex flex-col gap-6 justify-center">
           <Link to="/">
-            <img src={logoLight} alt="logoImg" className="w-28" />
+          <h1 className="font-titleFont text-3xl font-medium">
+              EasyTicket.LK
+            </h1>
           </Link>
           <div className="flex flex-col gap-1 -mt-1">
             <h1 className="font-titleFont text-xl font-medium">
@@ -62,11 +64,11 @@ const SignIn = () => {
             </span>
             <p className="text-base text-gray-300">
               <span className="text-white font-semibold font-titleFont">
-                Get started fast with OREBI
+                Get Started Browsing Events with EasyTicket.LK
               </span>
               <br />
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab omnis
-              nisi dolor recusandae consectetur!
+              Unlock a world of entertainment and stay updated with the latest events. 
+              Sign in and start your adventure!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
@@ -75,11 +77,11 @@ const SignIn = () => {
             </span>
             <p className="text-base text-gray-300">
               <span className="text-white font-semibold font-titleFont">
-                Access all OREBI services
+              Enjoy Seamless Event Booking with EasyTicket.LK
               </span>
               <br />
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab omnis
-              nisi dolor recusandae consectetur!
+              Access exclusive events and enjoy a hassle-free booking experience. 
+              Sign in and never miss out!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
@@ -88,17 +90,17 @@ const SignIn = () => {
             </span>
             <p className="text-base text-gray-300">
               <span className="text-white font-semibold font-titleFont">
-                Trusted by online Shoppers
+                Stay Connected with EasyTicket.LK
               </span>
               <br />
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab omnis
-              nisi dolor recusandae consectetur!
+                Join our community and get the best deals on event tickets. 
+                Sign in and elevate your experience!
             </p>
           </div>
           <div className="flex items-center justify-between mt-10">
             <Link to="/">
               <p className="text-sm font-titleFont font-semibold text-gray-300 hover:text-white cursor-pointer duration-300">
-                © OREBI
+                © EasyTicket.LK
               </p>
             </Link>
             <p className="text-sm font-titleFont font-semibold text-gray-300 hover:text-white cursor-pointer duration-300">

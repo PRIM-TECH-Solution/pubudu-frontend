@@ -49,7 +49,7 @@ const HeaderBottom = () => {
             className="flex h-14 cursor-pointer items-center gap-2 text-primeColor"
           >
             <HiOutlineMenuAlt4 className="w-5 h-5" />
-            <p className="text-[14px] font-normal">Shop by Category</p>
+            <p className="text-[14px] font-normal">Browse with Category</p>
 
             {show && (
               <motion.ul
@@ -58,25 +58,30 @@ const HeaderBottom = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute top-36 z-50 bg-primeColor w-auto text-[#767676] h-auto p-4 pb-6"
               >
-                <Link to={"category/imprimante"}>
+                <Link to={"category/Music"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Imprimante
+                    Music
                   </li>
                 </Link>
 
-                <Link to={"category/ancre"}>
+                <Link to={"category/Concerts"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    ancre
+                    Concerts
                   </li>
                 </Link>
-                <Link to={"category/Ruban"}>
+                <Link to={"category/Drama"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    ruban
+                    Drama
                   </li>
                 </Link>
-                <Link to={"category/Bac"}>
+                <Link to={"category/Exhibition"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Bac de dechet
+                    Exhibition
+                  </li>
+                </Link>
+                <Link to={"category/Sports"}>
+                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                    Sports
                   </li>
                 </Link>
               </motion.ul>

@@ -87,7 +87,7 @@ const ProductDetails = () => {
                 key={tab.id}
                 className={activeTab === tab.id ? "" : "hidden"}
               >
-                {tab.id === "Fiche Technique" && productInfo.ficheTech ? (
+                {tab.id === "EasyTicket.LK" && productInfo.ficheTech ? (
                   <div>
                     <table className="table-auto w-full">
                       <tbody>
