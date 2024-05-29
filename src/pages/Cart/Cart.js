@@ -6,20 +6,25 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
+import axios from "axios";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.orebiReducer.products);
-  const [totalAmt, setTotalAmt] = useState("");
-  const [shippingCharge, setShippingCharge] = useState("");
+  const [totalAmt, setTotalAmt] = useState(0);
+  const [shippingCharge, setShippingCharge] = useState(0);
+  const [ticketDetails, setTicketDetails] = useState([]);
+  const [missingEventIdProducts, setMissingEventIdProducts] = useState([]);
+  const [failedToFetchDetails, setFailedToFetchDetails] = useState(false);
+
   useEffect(() => {
     let price = 0;
-    products.map((item) => {
+    products.forEach((item) => {
       price += item.price * item.quantity;
-      return price;
     });
     setTotalAmt(price);
   }, [products]);
+
   useEffect(() => {
     if (totalAmt <= 200) {
       setShippingCharge(30);
@@ -29,25 +34,73 @@ const Cart = () => {
       setShippingCharge(20);
     }
   }, [totalAmt]);
+
+  useEffect(() => {
+    const fetchTicketDetails = async () => {
+      try {
+        const missingEventIdProducts = products.filter(product => !product.eventId);
+        setMissingEventIdProducts(missingEventIdProducts);
+
+        const ticketDetailsPromises = products.map((product) => {
+          if (!product.eventId) {
+            return Promise.resolve(null);
+          }
+          return axios.get(`http://localhost:8080/customTicketDetails/${product.eventId}`)
+            .then(response => response.data)
+            .catch((error) => {
+              if (error.response && error.response.status === 404) {
+                console.warn(`Ticket details not found for eventId: ${product.eventId}`);
+                return null;
+              }
+              console.error(`Error fetching details for eventId: ${product.eventId}`, error);
+              throw error;
+            });
+        });
+
+        const ticketDetailsResponses = await Promise.all(ticketDetailsPromises);
+        setTicketDetails(ticketDetailsResponses);
+      } catch (error) {
+        console.error("Error fetching ticket details:", error);
+        setFailedToFetchDetails(true);
+      }
+    };
+
+    if (products.length > 0) {
+      fetchTicketDetails();
+    }
+  }, [products]);
+
   return (
     <div className="max-w-container mx-auto px-4">
-      <Breadcrumbs title="Cart" />
+      <Breadcrumbs title="Select Your Tickets" />
       {products.length > 0 ? (
         <div className="pb-20">
-          <div className="w-full h-20 bg-[#F5F7F7] text-primeColor hidden lgl:grid grid-cols-5 place-content-center px-6 text-lg font-titleFont font-semibold">
+          {missingEventIdProducts.length > 0 && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <strong className="font-bold">Warning!</strong>
+              <span className="block sm:inline"> Some products are missing event IDs and will not be processed.</span>
+            </div>
+          )}
+          {failedToFetchDetails && (
+            <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <strong className="font-bold">Notice:</strong>
+              <span className="block sm:inline"> Some ticket details could not be fetched. Please try again later.</span>
+            </div>
+          )}
+          <div className="w-full h-20 bg-[#F5F7F7] text-primeColor hidden lgl:grid grid-cols-6 place-content-center px-6 text-lg font-titleFont font-semibold">
             <h2 className="col-span-2">Your Event Ticket</h2>
+            <h2>Ticket Type</h2>
             <h2>Price</h2>
             <h2>Quantity</h2>
             <h2>Sub Total</h2>
           </div>
           <div className="mt-5">
-            {products.map((item) => (
+            {products.map((item, index) => (
               <div key={item._id}>
-                <ItemCard item={item} />
+                <ItemCard item={item} ticketDetail={ticketDetails[index]} />
               </div>
             ))}
           </div>
-
           <button
             onClick={() => dispatch(resetCart())}
             className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
@@ -62,9 +115,7 @@ const Cart = () => {
                 type="text"
                 placeholder="Coupon Number"
               />
-              <p className="text-sm mdl:text-base font-semibold">
-                Apply Coupon
-              </p>
+              <p className="text-sm mdl:text-base font-semibold">Apply Coupon</p>
             </div>
             <p className="text-lg font-semibold">Update Cart</p>
           </div>
@@ -75,19 +126,19 @@ const Cart = () => {
                 <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
                   Subtotal
                   <span className="font-semibold tracking-wide font-titleFont">
-                    ${totalAmt}
+                    LKR{totalAmt}
                   </span>
                 </p>
                 <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
                   Extra Charge
                   <span className="font-semibold tracking-wide font-titleFont">
-                    ${shippingCharge}
+                    LKR{shippingCharge}
                   </span>
                 </p>
                 <p className="flex items-center justify-between border-[1px] border-gray-400 py-1.5 text-lg px-4 font-medium">
                   Total
                   <span className="font-bold tracking-wide text-lg font-titleFont">
-                    ${totalAmt + shippingCharge}
+                    LKR{totalAmt + shippingCharge}
                   </span>
                 </p>
               </div>

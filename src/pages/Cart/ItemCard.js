@@ -7,11 +7,11 @@ import {
   increaseQuantity,
 } from "../../redux/orebiSlice";
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, ticketDetail }) => {
   const dispatch = useDispatch();
   return (
-    <div className="w-full grid grid-cols-5 mb-4 border py-2">
-      <div className="flex col-span-5 mdl:col-span-2 items-center gap-4 ml-4">
+    <div className="w-full grid grid-cols-6 mb-4 border py-2">
+      <div className="flex col-span-6 mdl:col-span-2 items-center gap-4 ml-4">
         <ImCross
           onClick={() => dispatch(deleteItem(item._id))}
           className="text-primeColor hover:text-red-500 duration-300 cursor-pointer"
@@ -19,28 +19,31 @@ const ItemCard = ({ item }) => {
         <img className="w-32 h-32" src={item.image} alt="productImage" />
         <h1 className="font-titleFont font-semibold">{item.name}</h1>
       </div>
-      <div className="col-span-5 mdl:col-span-3 flex items-center justify-between py-4 mdl:py-0 px-4 mdl:px-0 gap-6 mdl:gap-0">
-        <div className="flex w-1/3 items-center text-lg font-semibold">
-          ${item.price}
-        </div>
-        <div className="w-1/3 flex items-center gap-6 text-lg">
-          <span
-            onClick={() => dispatch(drecreaseQuantity({ _id: item._id }))}
-            className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center hover:bg-gray-300 cursor-pointer duration-300 border-[1px] border-gray-300 hover:border-gray-300"
+      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center text-lg">
+        <p>{ticketDetail ? ticketDetail.type : "N/A"}</p>
+      </div>
+      <div className="col-span-2 mdl:col-span-1 flex items-center justify-center text-lg">
+        <p>LKR{item.ticketPice}</p>
+      </div>
+      <div className="col-span-3 mdl:col-span-1 flex items-center justify-center text-lg">
+        <div className="w-28 h-10 flex items-center justify-between text-lg text-gray-600 border p-3">
+          <button
+            onClick={() => dispatch(drecreaseQuantity(item._id))}
+            className="text-base text-gray-400 hover:text-black duration-300 cursor-pointer"
           >
             -
-          </span>
-          <p>{item.quantity}</p>
-          <span
-            onClick={() => dispatch(increaseQuantity({ _id: item._id }))}
-            className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center hover:bg-gray-300 cursor-pointer duration-300 border-[1px] border-gray-300 hover:border-gray-300"
+          </button>
+          <span>{item.quantity}</span>
+          <button
+            onClick={() => dispatch(increaseQuantity(item._id))}
+            className="text-base text-gray-400 hover:text-black duration-300 cursor-pointer"
           >
             +
-          </span>
+          </button>
         </div>
-        <div className="w-1/3 flex items-center font-titleFont font-bold text-lg">
-          <p>${item.quantity * item.price}</p>
-        </div>
+      </div>
+      <div className="col-span-3 mdl:col-span-1 flex items-center justify-center text-lg font-titleFont font-semibold text-primeColor">
+        <p>LKR{item.quantity * item.price}</p>
       </div>
     </div>
   );

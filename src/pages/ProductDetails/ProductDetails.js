@@ -9,26 +9,26 @@ const tabs = [
     id: "EasyTicket.LK",
     label: "EasyTicket.LK",
   },
-  {
-    id: "Description",
-    label: "Description",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis.",
-  },
-  {
-    id: "Video",
-    label: "Video",
-    content: (
-      <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/watch?v=6e0yIRDVPlA&list=RD6e0yIRDVPlA&start_radio=1"
-        title="YouTube Video"
-        frameBorder="0"
-        allowFullScreen
-      ></iframe>
-    ),
-  },
+  // {
+  //   id: "Description",
+  //   label: "Description",
+  //   content:
+  //     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis.",
+  // },
+  // {
+  //   id: "Video",
+  //   label: "Video",
+  //   content: (
+  //     <iframe
+  //       width="560"
+  //       height="315"
+  //       src="https://www.youtube.com/embed/watch?v=6e0yIRDVPlA&list=RD6e0yIRDVPlA&start_radio=1"
+  //       title="YouTube Video"
+  //       frameBorder="0"
+  //       allowFullScreen
+  //     ></iframe>
+  //   ),
+  // },
   // Add more tabs as needed
 ];
 

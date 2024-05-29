@@ -53,9 +53,9 @@ const BannerBottom = () => {
             </svg>
           </span>
           <p className="text-lightText text-base">
-            Free shipping <br />{" "}
+            Click Book <br />{" "}
             <span className="text-lightText text-base">
-              Free Shipping World Wide
+              And Enjoy Best Events
             </span>
           </p>
         </div>

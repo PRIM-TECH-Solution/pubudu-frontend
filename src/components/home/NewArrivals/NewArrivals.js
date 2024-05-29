@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Slider from "react-slick";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
@@ -9,8 +9,9 @@ import axios from "axios";
 const NewArrivals = () => {
   const [responces, setResponce] = useState([]);
   const [events, setEvents] = useState([]);
-  const getData = async () => {
-    // Chage the API end point of retriving the recent events
+
+  const getData = useCallback(async () => {
+    // Change the API endpoint for retrieving the recent events
     const responce = await axios.get("http://localhost:8080/eventcards/getAll");
     setResponce(responce.data);
     console.log(responces.length);
@@ -24,14 +25,17 @@ const NewArrivals = () => {
         ticketDetails: e.ticketDetails,
         eventCategory: e.eventCategory,
         flyerLink: e.flyerLink,
+        eventId: e.eventId,
+        ticketType:e.ticketType,
+        ticketPrice:e.ticketPrice
       }));
       setEvents(event);
     }
-  };
+  }, [responces.length]); // Adding responces.length as a dependency
+
   useEffect(() => {
     getData();
-  }, []);
-
+  }, [getData]);
 
   const settings = {
     infinite: true,
@@ -67,6 +71,7 @@ const NewArrivals = () => {
       },
     ],
   };
+
   return (
     <div className="w-full pb-16">
       <Heading heading="Latest Events" />
@@ -75,6 +80,7 @@ const NewArrivals = () => {
           <div className="px-2" key={index}>
             <Product
               _id={index}
+              eventId={event.eventId}
               img={event.flyerLink}
               productName={event.eventName}
               location={event.eventLocation}
@@ -83,7 +89,8 @@ const NewArrivals = () => {
               time={event.eventTime}
               ticketDetails={event.ticketDetails}
               badge={true}
-
+              ticketType={event.ticketType}
+              ticketPrice={event.ticketPrice}
             />
           </div>
         ))}

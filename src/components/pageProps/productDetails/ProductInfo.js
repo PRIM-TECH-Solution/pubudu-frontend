@@ -1,6 +1,6 @@
-// src/components/home/Products/ProductInfo.js
 import React from "react";
 import { addToCart } from "../../../redux/orebiSlice";
+import { FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
 const ProductInfo = ({ productInfo, dispatch }) => {
   const highlightStyle = {
@@ -33,9 +33,15 @@ const ProductInfo = ({ productInfo, dispatch }) => {
         {/* <span className="text-xs ml-2 inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white">
           Save 100
         </span> */}
-        <span className="text-lg ml-2">Location: {productInfo.location}</span>
+        <span className="text-lg ml-2 inline-flex items-center">
+          <FaMapMarkerAlt className="mr-1" /> Location: {productInfo.eventId}
+        </span>
       </p>
-      
+      <p className="text-2xl font-semibold">
+        <span className="text-lg ml-2 inline-flex items-center">
+          <FaClock className="mr-1" /> Time: {productInfo.time}
+        </span>
+      </p>
       <hr />
       <p className="text-base text-gray-600">{renderDescription()}</p>
       <div className="flex items-center">
@@ -66,6 +72,7 @@ const ProductInfo = ({ productInfo, dispatch }) => {
       <p className="font-medium text-lg">
         <span className="font-normal">Category:</span> {productInfo.color}
       </p>
+      
       <button
         onClick={() =>
           dispatch(
@@ -80,6 +87,9 @@ const ProductInfo = ({ productInfo, dispatch }) => {
               colors: productInfo.color,
               time: productInfo.time,
               location: productInfo.location,
+              eventId:productInfo.eventId,
+              ticketType:productInfo.ticketType,
+              ticketPrice:productInfo.ticketPrice
             })
           )
         }
@@ -87,6 +97,7 @@ const ProductInfo = ({ productInfo, dispatch }) => {
       >
         Book Your Ticket
       </button>
+      
     </div>
   );
 };

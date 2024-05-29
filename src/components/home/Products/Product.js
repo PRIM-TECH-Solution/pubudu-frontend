@@ -62,7 +62,8 @@ const Product = (props) => {
                     badge: props.badge,
                     price: props.price,
                     colors: props.color,
-                    time:props.time
+                    time:props.time,
+                    eventId:props.eventId
                   })
                 )
               }
