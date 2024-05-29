@@ -83,7 +83,7 @@ const ProductInfo = ({ productInfo, dispatch }) => {
               image: productInfo.img,
               description: productInfo.des,
               badge: productInfo.badge,
-              price: productInfo.price,
+              //price: productInfo.price,
               colors: productInfo.color,
               time: productInfo.time,
               location: productInfo.location,

@@ -7,8 +7,14 @@ import {
   increaseQuantity,
 } from "../../redux/orebiSlice";
 
-const ItemCard = ({ item, ticketDetail }) => {
+const ItemCard = ({ item, ticketDetails }) => {
   const dispatch = useDispatch();
+  
+  // Find the corresponding ticket details for the current item
+  const itemTicketDetails = ticketDetails.filter(
+    (detail) => detail.eventId === item.eventId
+  );
+
   return (
     <div className="w-full grid grid-cols-6 mb-4 border py-2">
       <div className="flex col-span-6 mdl:col-span-2 items-center gap-4 ml-4">
@@ -19,32 +25,43 @@ const ItemCard = ({ item, ticketDetail }) => {
         <img className="w-32 h-32" src={item.image} alt="productImage" />
         <h1 className="font-titleFont font-semibold">{item.name}</h1>
       </div>
-      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center text-lg">
-        <p>{ticketDetail ? ticketDetail.type : "N/A"}</p>
+      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center text-lg font-semibold">
+        <p>{item.ticketType}</p>
       </div>
-      <div className="col-span-2 mdl:col-span-1 flex items-center justify-center text-lg">
-        <p>LKR{item.ticketPice}</p>
+      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center text-lg font-semibold">
+        <p>LKR{item.price}</p>
       </div>
-      <div className="col-span-3 mdl:col-span-1 flex items-center justify-center text-lg">
-        <div className="w-28 h-10 flex items-center justify-between text-lg text-gray-600 border p-3">
-          <button
-            onClick={() => dispatch(drecreaseQuantity(item._id))}
-            className="text-base text-gray-400 hover:text-black duration-300 cursor-pointer"
-          >
-            -
-          </button>
-          <span>{item.quantity}</span>
-          <button
-            onClick={() => dispatch(increaseQuantity(item._id))}
-            className="text-base text-gray-400 hover:text-black duration-300 cursor-pointer"
-          >
-            +
-          </button>
+      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center gap-6 text-lg">
+        <span
+          onClick={() => dispatch(drecreaseQuantity({ _id: item._id }))}
+          className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
+        >
+          -
+        </span>
+        <span>{item.quantity}</span>
+        <span
+          onClick={() => dispatch(increaseQuantity({ _id: item._id }))}
+          className="w-6 h-6 bg-gray-100 text-xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
+        >
+          +
+        </span>
+      </div>
+      <div className="col-span-6 mdl:col-span-1 flex items-center justify-center text-lg font-semibold">
+        <p>LKR{item.price * item.quantity}</p>
+      </div>
+      {/* Display ticket details if available */}
+      {itemTicketDetails.length > 0 && (
+        <div className="col-span-6 p-4 bg-gray-100 rounded-md">
+          <h3 className="font-semibold">Ticket Details:</h3>
+          <ul>
+            {itemTicketDetails.map((detail) => (
+              <li key={detail.ticketType}>
+                {detail.ticketType}: LKR{detail.ticketPrice}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-      <div className="col-span-3 mdl:col-span-1 flex items-center justify-center text-lg font-titleFont font-semibold text-primeColor">
-        <p>LKR{item.quantity * item.price}</p>
-      </div>
+      )}
     </div>
   );
 };
