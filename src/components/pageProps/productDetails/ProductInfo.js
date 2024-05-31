@@ -1,8 +1,13 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../../redux/orebiSlice";
 import { FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
-const ProductInfo = ({ productInfo, dispatch }) => {
+const ProductInfo = ({ productInfo }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const highlightStyle = {
     color: "#d0121a", 
     fontWeight: "bold", 
@@ -24,15 +29,31 @@ const ProductInfo = ({ productInfo, dispatch }) => {
     return <>{description}</>;
   };
 
+  const handleBookTicket = () => {
+    dispatch(
+      addToCart({
+        _id: productInfo._id,
+        name: productInfo.productName,
+        quantity: 1,
+        image: productInfo.img,
+        description: productInfo.des,
+        badge: productInfo.badge,
+        colors: productInfo.color,
+        time: productInfo.time,
+        location: productInfo.location,
+        eventId: productInfo.eventId,
+        ticketType: productInfo.ticketType,
+        ticketPrice: productInfo.ticketPrice,
+      })
+    );
+    navigate("/cart");
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <h2 className="text-4xl font-semibold">{productInfo.productName}</h2>
       <p className="text-2xl font-semibold">
-        {productInfo.ticketdetails} 
-        {/* <span className="text-xl font-semibold line-through ml-2">540</span> */}
-        {/* <span className="text-xs ml-2 inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white">
-          Save 100
-        </span> */}
+        {productInfo.ticketdetails}
         <span className="text-lg ml-2 inline-flex items-center">
           <FaMapMarkerAlt className="mr-1" /> Location: {productInfo.eventId}
         </span>
@@ -74,25 +95,7 @@ const ProductInfo = ({ productInfo, dispatch }) => {
       </p>
       
       <button
-        onClick={() =>
-          dispatch(
-            addToCart({
-              _id: productInfo._id,
-              name: productInfo.productName,
-              quantity: 1,
-              image: productInfo.img,
-              description: productInfo.des,
-              badge: productInfo.badge,
-              //price: productInfo.price,
-              colors: productInfo.color,
-              time: productInfo.time,
-              location: productInfo.location,
-              eventId:productInfo.eventId,
-              ticketType:productInfo.ticketType,
-              ticketPrice:productInfo.ticketPrice
-            })
-          )
-        }
+        onClick={handleBookTicket}
         className="w-full py-4 bg-blue-500 hover:bg-blue-600 duration-300 text-white text-lg font-titleFont"
       >
         Book Your Ticket

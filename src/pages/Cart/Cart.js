@@ -11,14 +11,13 @@ import ItemCard from "./ItemCard";
 const Cart = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.orebiReducer.products);
-  const [totalAmt, setTotalAmt] = useState("");
-  const [shippingCharge, setShippingCharge] = useState("");
+  const [totalAmt, setTotalAmt] = useState(0);
+  const [shippingCharge, setShippingCharge] = useState(0);
   const [ticketDetails, setTicketDetails] = useState([]);
 
   useEffect(() => {
     const fetchTicketDetails = async () => {
       try {
-        // Replace 'YOUR_EVENT_ID' with the actual event ID or a dynamic value if needed
         const eventIds = products.map((item) => item.eventId);
         const responses = await Promise.all(
           eventIds.map(eventId =>
@@ -36,14 +35,16 @@ const Cart = () => {
     fetchTicketDetails();
   }, [products]);
 
-  useEffect(() => {
-    let price = 0;
-    products.map((item) => {
-      price += item.price * item.quantity;
-      return price;
+  const handleQuantityChange = (newSelectedTickets) => {
+    let newTotalAmt = 0;
+    newSelectedTickets.forEach(ticket => {
+      const ticketDetail = ticketDetails.find(detail => detail.ticketType === ticket.ticketType);
+      if (ticketDetail) {
+        newTotalAmt += ticketDetail.ticketPrice * ticket.quantity;
+      }
     });
-    setTotalAmt(price);
-  }, [products]);
+    setTotalAmt(newTotalAmt);
+  };
 
   useEffect(() => {
     if (totalAmt <= 200) {
@@ -70,7 +71,7 @@ const Cart = () => {
           <div className="mt-5">
             {products.map((item) => (
               <div key={item._id}>
-                <ItemCard item={item} ticketDetails={ticketDetails} />
+                <ItemCard item={item} ticketDetails={ticketDetails} onQuantityChange={handleQuantityChange} />
               </div>
             ))}
           </div>

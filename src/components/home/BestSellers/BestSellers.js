@@ -4,13 +4,11 @@ import Product from "../Products/Product";
 import axios from "axios";
 
 const BestSellers = () => {
-  const [responses, setResponses] = useState([]);
   const [events, setEvents] = useState([]);
 
   const getData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/eventcards/getAll");
-      setResponses(response.data);
       if (response.data != null) {
         const event = response.data.map((e) => ({
           eventName: e.eventName,
@@ -21,6 +19,9 @@ const BestSellers = () => {
           ticketDetails: e.ticketDetails,
           eventCategory: e.eventCategory,
           flyerLink: e.flyerLink,
+          eventId: e.eventId,
+          ticketType: e.ticketType,
+          ticketPrice: e.ticketPrice
         }));
         setEvents(event);
       }
@@ -48,6 +49,9 @@ const BestSellers = () => {
               des={event.eventDescription}
               time={event.eventTime}
               ticketDetails={event.ticketDetails}
+              ticketType={event.ticketType}
+              ticketPrice={event.ticketPrice}
+              eventId={event.eventId}
               //badge={true}
             />
           </div>

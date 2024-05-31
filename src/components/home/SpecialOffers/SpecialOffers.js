@@ -9,16 +9,16 @@ const SpecialOffers = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/eventcards/category/${category}`);
-      setEvents(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/eventcards/category/${category}`);
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchData();
   }, [category]);
   
@@ -42,6 +42,8 @@ const SpecialOffers = () => {
             location={event.eventLocation}
             //badge={true}
             des={event.eventDescription}
+            ticketType={event.ticketType}
+            ticketPrice={event.ticketPrice}
           />
         ))}
       </div>

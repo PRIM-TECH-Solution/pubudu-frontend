@@ -3,8 +3,8 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { motion } from "framer-motion";
-import { logo, logoLight } from "../../../assets/images";
-import Image from "../../designLayouts/Image";
+import { logoLight } from "../../../assets/images";
+//import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
 import Flex from "../../designLayouts/Flex";
 
@@ -12,7 +12,7 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [sidenav, setSidenav] = useState(false);
   const [category, setCategory] = useState(false);
-  const [brand, setBrand] = useState(false);
+  //const [brand, setBrand] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const Header = () => {
                         </motion.ul>
                       )}
                     </div>
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                       <h1
                         onClick={() => setBrand(!brand)}
                         className="flex justify-between text-base cursor-pointer items-center font-titleFont mb-2 text-white"
@@ -135,7 +135,7 @@ const Header = () => {
                           <li className="headerSedenavLi text-white">Sports</li>
                         </motion.ul>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                   <span
                     onClick={() => setSidenav(false)}
