@@ -24,6 +24,9 @@ const Pagination = ({ itemsPerPage }) => {
           ticketDetails: e.ticketDetails,
           eventCategory: e.eventCategory,
           flyerLink: e.flyerLink,
+          eventId: e.eventId,
+          ticketType: e.ticketType,
+          ticketPrice: e.ticketPrice
         }));
         setEvents(event);
       }
@@ -65,6 +68,9 @@ const Pagination = ({ itemsPerPage }) => {
               des={event.eventDescription}
               time={event.eventTime}
               ticketDetails={event.ticketDetails}
+              ticketType={event.ticketType}
+              ticketPrice={event.ticketPrice}
+              eventId={event.eventId}
               //badge={true}
             />
           </div>

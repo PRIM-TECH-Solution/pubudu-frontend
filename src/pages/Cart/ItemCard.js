@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { ImCross } from "react-icons/im";
-import { useDispatch } from "react-redux";
-import {
-  deleteItem,
-  //decreaseQuantity,
-  //increaseQuantity,
-} from "../../redux/orebiSlice";
+//import { ImCross } from "react-icons/im";
+//import { useDispatch } from "react-redux";
+//import { deleteItem } from "../../redux/orebiSlice";
 
 const ItemCard = ({ item, ticketDetails, onQuantityChange }) => {
-  const dispatch = useDispatch();
-
+  //const dispatch = useDispatch();
   const [selectedTickets, setSelectedTickets] = useState([]);
 
   useEffect(() => {
     const initialTickets = ticketDetails.map(detail => ({
       ticketType: detail.ticketType,
-      quantity: item.ticketType === detail.ticketType ? item.quantity : 0
+      quantity: item.ticketType === detail.ticketType ? item.quantity : 0,
     }));
     setSelectedTickets(initialTickets);
   }, [item.ticketType, item.quantity, ticketDetails]);
@@ -44,41 +39,45 @@ const ItemCard = ({ item, ticketDetails, onQuantityChange }) => {
   const totalSubtotal = selectedTickets.reduce((acc, ticket) => acc + calculateSubtotal(ticket), 0);
 
   return (
-    <div className="w-full border py-2 mb-4">
-      <div className="flex items-center gap-4 ml-4">
-        <ImCross
-          onClick={() => dispatch(deleteItem(item._id))}
-          className="text-primeColor hover:text-red-500 duration-300 cursor-pointer"
-        />
-        <img className="w-32 h-32" src={item.image} alt="productImage" />
-        <h1 className="font-titleFont font-semibold">{item.name}</h1>
+    <div className="flex flex-col md:flex-row w-full border py-4 mb-4">
+      <div className="flex flex-col items-center gap-4 p-4 md:border-r w-full md:w-1/4">
+        
+        <img className="w-full h-auto object-cover" src={item.image} alt="productImage" />
+        
       </div>
-      {ticketDetails.map((ticketDetail, index) => (
-        <div key={index} className="flex items-center justify-between px-4 py-2 border-t">
-          <div className="flex items-center gap-4">
-            <p>{ticketDetail.ticketType}</p>
-            <p>LKR{ticketDetail.ticketPrice}</p>
-          </div>
-          <div className="flex items-center gap-6">
-            <span
-              onClick={() => handleQuantityChange(index, false)}
-              className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
-            >
-              -
-            </span>
-            <span>{selectedTickets[index] ? selectedTickets[index].quantity : 0}</span>
-            <span
-              onClick={() => handleQuantityChange(index, true)}
-              className="w-6 h-6 bg-gray-100 text-xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
-            >
-              +
-            </span>
-            <p>LKR{calculateSubtotal(selectedTickets[index])}</p>
-          </div>
+      <div className="w-full md:w-3/4 px-6 py-2">
+        <h2 className="font-titleFont font-semibold text-4xl mb-4 text-center">{item.name}</h2>
+        <div className="grid grid-cols-4 place-content-center py-2 border-b bg-gray-200">
+          <div className="font-semibold text-2xl text-center">Ticket Type</div>
+          <div className="font-semibold text-2xl text-center">Price</div>
+          <div className="font-semibold text-2xl text-center">Quantity</div>
+          <div className="font-semibold text-2xl text-center">Sub Total</div>
         </div>
-      ))}
-      <div className="flex items-center justify-end px-4 py-2 border-t">
-        <p className="font-semibold">Total: LKR{totalSubtotal}</p>
+        {ticketDetails.map((ticketDetail, index) => (
+          <div key={index} className="grid grid-cols-4 place-content-center py-2 border-b">
+            <div className="font-semibold flex items-center justify-center text-xl">{ticketDetail.ticketType}</div>
+            <div className="font-semibold flex items-center justify-center text-xl">{ticketDetail.ticketPrice} LKR</div>
+            <div className="font-semibold flex items-center justify-center gap-2 text-xl">
+              <span
+                onClick={() => handleQuantityChange(index, false)}
+                className="w-8 h-8 bg-gray-100 text-xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
+              >
+                -
+              </span>
+              <span>{selectedTickets[index] ? selectedTickets[index].quantity : 0}</span>
+              <span
+                onClick={() => handleQuantityChange(index, true)}
+                className="w-8 h-8 bg-gray-100 text-xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
+              >
+                +
+              </span>
+            </div>
+            <div className="flex items-center justify-center text-lg">{calculateSubtotal(selectedTickets[index])} LKR</div>
+          </div>
+        ))}
+        <div className="flex items-center justify-end px-4 py-2 border-t">
+          <p className="font-semibold text-lg">Total: {totalSubtotal} LKR</p>
+        </div>
       </div>
     </div>
   );

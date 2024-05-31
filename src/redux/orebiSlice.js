@@ -13,16 +13,21 @@ export const orebiSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const item = state.products.find(
-        (item) => item._id === action.payload._id
-      );
-      if (item) {
-        item.quantity += action.payload.quantity;
+      if (state.products.length > 0) {
+        // Display a message that the cart already contains an event
+        toast.error("There is an event already added to the cart");
       } else {
-        state.products.push(action.payload);
+        const item = state.products.find(
+          (item) => item._id === action.payload._id
+        );
+        if (item) {
+          item.quantity += action.payload.quantity;
+        } else {
+          state.products.push(action.payload);
+        }
+        // Dispatch a success toast
+        toast.success("Product added to cart");
       }
-      // Dispatch a success toast
-      toast.success("Product added to cart");
     },
     increaseQuantity: (state, action) => {
       const item = state.products.find(
@@ -33,7 +38,7 @@ export const orebiSlice = createSlice({
         // Dispatch a success toast
       }
     },
-    drecreaseQuantity: (state, action) => {
+    decreaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item._id === action.payload._id
       );
@@ -91,7 +96,7 @@ export const orebiSlice = createSlice({
 export const {
   addToCart,
   increaseQuantity,
-  drecreaseQuantity,
+  decreaseQuantity,
   deleteItem,
   resetCart,
   toggleBrand,
