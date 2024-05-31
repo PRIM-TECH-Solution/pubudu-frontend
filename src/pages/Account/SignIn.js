@@ -1,60 +1,86 @@
 import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-//import { logoLight } from "../../assets/images";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
-  // ============= Initial State Start here =============
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // ============= Initial State End here ===============
   // ============= Error Msg Start here =================
-  const [errEmail, setErrEmail] = useState("");
+  const [errUsername, setErrUsername] = useState("");
   const [errPassword, setErrPassword] = useState("");
 
   // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
-  // ============= Event Handler Start here =============
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-    setErrEmail("");
+  // ============= Form Values Start here ===============
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  // ============= Event Handlers Start here =============
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+    setErrUsername("");
   };
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setErrPassword("");
   };
-  // ============= Event Handler End here ===============
-  const handleSignUp = (e) => {
+
+  // ============= Login Handler Start here ===============
+  const login = async (e) => {
     e.preventDefault();
-
-    if (!email) {
-      setErrEmail("Enter your email");
+    
+    // Clear previous error messages
+    setErrUsername('');
+    setErrPassword('');
+  
+    // Validate inputs
+    if (!username) {
+      setErrUsername("Enter your Username");
+      return;
     }
-
     if (!password) {
       setErrPassword("Create a password");
+      return;
     }
-    // ============== Getting the value ==============
-    if (email && password) {
-      setSuccessMsg(
-        `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-      );
-      setEmail("");
-      setPassword("");
+  
+    try {
+      const res = await axios.post("http://localhost:8080/auth/login", {
+        username,
+        password,
+      });
+  
+      const message = res.data;
+      console.log(message);
+  
+      if (message.startsWith("Login successful")) {
+        // Extract token from the response if needed
+        const token = message.split("Token: ")[1];
+        // Optionally save the token to local storage or context
+        localStorage.setItem('token', token);
+        navigate('/');
+      } else {
+        alert(message); // This will show "Invalid username or password" or any other error message
+      }
+    } catch (err) {
+      alert("An error occurred during login. Please try again.");
     }
   };
+  
+
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
         <div className="w-[450px] h-full bg-primeColor px-10 flex flex-col gap-6 justify-center">
           <Link to="/">
-          <h1 className="font-titleFont text-3xl font-medium">
+            <h1 className="font-titleFont text-3xl font-medium">
               EasyTicket.LK
             </h1>
           </Link>
           <div className="flex flex-col gap-1 -mt-1">
             <h1 className="font-titleFont text-xl font-medium">
-              Stay sign in for more
+              Stay signed in for more
             </h1>
             <p className="text-base">When you sign in, you are with us!</p>
           </div>
@@ -67,7 +93,7 @@ const SignIn = () => {
                 Get Started Browsing Events with EasyTicket.LK
               </span>
               <br />
-              Unlock a world of entertainment and stay updated with the latest events. 
+              Unlock a world of entertainment and stay updated with the latest events.
               Sign in and start your adventure!
             </p>
           </div>
@@ -77,10 +103,10 @@ const SignIn = () => {
             </span>
             <p className="text-base text-gray-300">
               <span className="text-white font-semibold font-titleFont">
-              Enjoy Seamless Event Booking with EasyTicket.LK
+                Enjoy Seamless Event Booking with EasyTicket.LK
               </span>
               <br />
-              Access exclusive events and enjoy a hassle-free booking experience. 
+              Access exclusive events and enjoy a hassle-free booking experience.
               Sign in and never miss out!
             </p>
           </div>
@@ -93,8 +119,8 @@ const SignIn = () => {
                 Stay Connected with EasyTicket.LK
               </span>
               <br />
-                Join our community and get the best deals on event tickets. 
-                Sign in and elevate your experience!
+              Join our community and get the best deals on event tickets.
+              Sign in and elevate your experience!
             </p>
           </div>
           <div className="flex items-center justify-between mt-10">
@@ -124,35 +150,37 @@ const SignIn = () => {
             <Link to="/signup">
               <button
                 className="w-full h-10 bg-primeColor text-gray-200 rounded-md text-base font-titleFont font-semibold 
-            tracking-wide hover:bg-black hover:text-white duration-300"
+                tracking-wide hover:bg-black hover:text-white duration-300"
               >
                 Sign Up
               </button>
             </Link>
           </div>
         ) : (
-          <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center">
+          <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center" onSubmit={login}>
             <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
                 Sign in
               </h1>
               <div className="flex flex-col gap-3">
-                {/* Email */}
+                {/* Username */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
-                    Work Email
+                    Username
                   </p>
                   <input
-                    onChange={handleEmail}
-                    value={email}
+                    onChange={(user)=>{
+                      setUsername(user.target.value)
+                    }}
+                    value={username}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="email"
-                    placeholder="john@workemail.com"
+                    type="text"
+                    placeholder=""
                   />
-                  {errEmail && (
+                  {errUsername && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>
-                      {errEmail}
+                      {errUsername}
                     </p>
                   )}
                 </div>
@@ -163,7 +191,9 @@ const SignIn = () => {
                     Password
                   </p>
                   <input
-                    onChange={handlePassword}
+                    onChange={(user)=>{
+                      setPassword(user.target.value)
+                    }}
                     value={password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="password"
@@ -178,7 +208,8 @@ const SignIn = () => {
                 </div>
 
                 <button
-                  onClick={handleSignUp}
+                  type="submit"
+                  onClick={login}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                 >
                   Sign In
