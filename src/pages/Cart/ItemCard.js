@@ -46,18 +46,18 @@ const ItemCard = ({ item, ticketDetails, onQuantityChange }) => {
         
       </div>
       <div className="w-full md:w-3/4 px-6 py-2">
-        <h2 className="font-titleFont font-semibold text-4xl mb-4 text-center">{item.name}</h2>
-        <div className="grid grid-cols-4 place-content-center py-2 border-b bg-gray-200">
-          <div className="font-semibold text-2xl text-center">Ticket Type</div>
-          <div className="font-semibold text-2xl text-center">Price</div>
-          <div className="font-semibold text-2xl text-center">Quantity</div>
-          <div className="font-semibold text-2xl text-center">Sub Total</div>
+        <h2 className="font-titleFont font-semibold text-4xl mb-4 text-center ">{item.name}</h2>
+        <div className="grid grid-cols-4 place-content-center py-2 border-b bg-sky-100">
+          <div className="font-semibold text-2xl text-center text-blue-600">Ticket Type</div>
+          <div className="font-semibold text-2xl text-center text-blue-600">Price</div>
+          <div className="font-semibold text-2xl text-center text-blue-600">Quantity</div>
+          <div className="font-semibold text-2xl text-center text-blue-600">Sub Total</div>
         </div>
         {ticketDetails.map((ticketDetail, index) => (
           <div key={index} className="grid grid-cols-4 place-content-center py-2 border-b">
-            <div className="font-semibold flex items-center justify-center text-xl">{ticketDetail.ticketType}</div>
-            <div className="font-semibold flex items-center justify-center text-xl">{ticketDetail.ticketPrice} LKR</div>
-            <div className="font-semibold flex items-center justify-center gap-2 text-xl">
+            <div className="font-semibold text-gray-700 flex items-center justify-center text-xl">{ticketDetail.ticketType}</div>
+            <div className="font-semibold text-gray-700 flex items-center justify-center text-xl">{ticketDetail.ticketPrice} LKR</div>
+            <div className="flex items-center justify-center gap-2 text-xl">
               <span
                 onClick={() => handleQuantityChange(index, false)}
                 className="w-8 h-8 bg-gray-100 text-xl flex items-center justify-center cursor-pointer hover:bg-gray-300 duration-200"
@@ -72,11 +72,12 @@ const ItemCard = ({ item, ticketDetails, onQuantityChange }) => {
                 +
               </span>
             </div>
-            <div className="flex items-center justify-center text-lg">{calculateSubtotal(selectedTickets[index])} LKR</div>
+            <div className="font-semibold text-gray-700 flex items-center justify-center text-lg">{calculateSubtotal(selectedTickets[index])} LKR</div>
           </div>
         ))}
-        <div className="flex items-center justify-end px-4 py-2 border-t">
-          <p className="font-semibold text-lg">Total: {totalSubtotal} LKR</p>
+        <div className="flex items-center justify-between px-4 py-2 border-t bg-gray-100">
+          <p className="font-semibold text-2xl">Ticket Total:</p>
+          <p className="font-semibold text-2xl">{totalSubtotal} LKR</p>
         </div>
       </div>
     </div>

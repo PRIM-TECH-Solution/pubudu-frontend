@@ -61,13 +61,6 @@ const Cart = () => {
       <Breadcrumbs title="Select Your Tickets" />
       {products.length > 0 ? (
         <div className="pb-20">
-          <div className="">
-            {/* <h2 className="col-span-2">Your Event Ticket</h2>
-            <h2>Ticket Type</h2>
-            <h2>Price</h2>
-            <h2>Quantity</h2>
-            <h2>Sub Total</h2> */}
-          </div>
           <div className="mt-5">
             {products.map((item) => (
               <div key={item._id}>
@@ -76,58 +69,22 @@ const Cart = () => {
             ))}
           </div>
 
-          <button
-            onClick={() => dispatch(resetCart())}
-            className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
-          >
-            Reset Order
-          </button>
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={() => dispatch(resetCart())}
+              className="py-2 px-10 bg-red-500 text-white font-semibold uppercase hover:bg-red-700 duration-300"
+            >
+              Reset Order
+            </button>
 
-          <div className="flex flex-col mdl:flex-row justify-between border py-4 px-4 items-center gap-2 mdl:gap-0">
-            <div className="flex items-center gap-4">
-              <input
-                className="w-44 mdl:w-52 h-8 px-4 border text-primeColor text-sm outline-none border-gray-400"
-                type="text"
-                placeholder="Coupon Number"
-              />
-              <p className="text-sm mdl:text-base font-semibold">
-                Apply Coupon
-              </p>
-            </div>
-            <p className="text-lg font-semibold">Update Cart</p>
-          </div>
-          <div className="max-w-7xl gap-4 flex justify-end mt-4">
-            <div className="w-96 flex flex-col gap-4">
-              <h1 className="text-2xl font-semibold text-right">Ticket totals</h1>
-              <div>
-                <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
-                  Subtotal
-                  <span className="font-semibold tracking-wide font-titleFont">
-                    LKR{totalAmt}
-                  </span>
-                </p>
-                <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
-                  Extra Charge
-                  <span className="font-semibold tracking-wide font-titleFont">
-                    LKR{shippingCharge}
-                  </span>
-                </p>
-                <p className="flex items-center justify-between border-[1px] border-gray-400 py-1.5 text-lg px-4 font-medium">
-                  Total Amount
-                  <span className="font-bold tracking-wide text-lg font-titleFont">
-                    LKR{totalAmt + shippingCharge}
-                  </span>
-                </p>
-              </div>
-              <Link className="w-full" to="/checkout">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full text-center py-3 text-white text-lg bg-primeColor hover:bg-black duration-300"
-                >
-                  Process To Checkout
-                </motion.button>
-              </Link>
-            </div>
+            <Link className="w-full max-w-sm" to="/checkout">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="w-full text-center py-3 text-white text-lg bg-primeColor hover:bg-black duration-300"
+              >
+                Proceed to Checkout
+              </motion.button>
+            </Link>
           </div>
         </div>
       ) : (
