@@ -2,40 +2,22 @@ import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
-  // ============= Error Msg Start here =================
   const [errUsername, setErrUsername] = useState("");
   const [errPassword, setErrPassword] = useState("");
-
-  // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
-  // ============= Form Values Start here ===============
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // ============= Event Handlers Start here =============
-  const handleUsername = (e) => {
-    setUsername(e.target.value);
-    setErrUsername("");
-  };
-
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-    setErrPassword("");
-  };
-
-  // ============= Login Handler Start here ===============
   const login = async (e) => {
     e.preventDefault();
     
-    // Clear previous error messages
-    setErrUsername('');
-    setErrPassword('');
+    setErrUsername("");
+    setErrPassword("");
   
-    // Validate inputs
     if (!username) {
       setErrUsername("Enter your Username");
       return;
@@ -55,72 +37,51 @@ const SignIn = () => {
       console.log(message);
   
       if (message.startsWith("Login successful")) {
-        // Extract token from the response if needed
         const token = message.split("Token: ")[1];
-        // Optionally save the token to local storage or context
-        localStorage.setItem('token', token);
-        navigate('/');
+        localStorage.setItem("token", token);
+        setSuccessMsg("Login successful!");
+        navigate("/");
       } else {
-        alert(message); // This will show "Invalid username or password" or any other error message
+        alert(message);
       }
     } catch (err) {
       alert("An error occurred during login. Please try again.");
     }
   };
-  
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
         <div className="w-[450px] h-full bg-primeColor px-10 flex flex-col gap-6 justify-center">
           <Link to="/">
-            <h1 className="font-titleFont text-3xl font-medium">
-              EasyTicket.LK
-            </h1>
+            <h1 className="font-titleFont text-3xl font-medium">EasyTicket.LK</h1>
           </Link>
           <div className="flex flex-col gap-1 -mt-1">
-            <h1 className="font-titleFont text-xl font-medium">
-              Stay signed in for more
-            </h1>
+            <h1 className="font-titleFont text-xl font-medium">Stay signed in for more</h1>
             <p className="text-base">When you sign in, you are with us!</p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1">
-              <BsCheckCircleFill />
-            </span>
+            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">
-                Get Started Browsing Events with EasyTicket.LK
-              </span>
+              <span className="text-white font-semibold font-titleFont">Get Started Browsing Events with EasyTicket.LK</span>
               <br />
-              Unlock a world of entertainment and stay updated with the latest events.
-              Sign in and start your adventure!
+              Unlock a world of entertainment and stay updated with the latest events. Sign in and start your adventure!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1">
-              <BsCheckCircleFill />
-            </span>
+            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">
-                Enjoy Seamless Event Booking with EasyTicket.LK
-              </span>
+              <span className="text-white font-semibold font-titleFont">Enjoy Seamless Event Booking with EasyTicket.LK</span>
               <br />
-              Access exclusive events and enjoy a hassle-free booking experience.
-              Sign in and never miss out!
+              Access exclusive events and enjoy a hassle-free booking experience. Sign in and never miss out!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1">
-              <BsCheckCircleFill />
-            </span>
+            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">
-                Stay Connected with EasyTicket.LK
-              </span>
+              <span className="text-white font-semibold font-titleFont">Stay Connected with EasyTicket.LK</span>
               <br />
-              Join our community and get the best deals on event tickets.
-              Sign in and elevate your experience!
+              Join our community and get the best deals on event tickets. Sign in and elevate your experience!
             </p>
           </div>
           <div className="flex items-center justify-between mt-10">
@@ -169,9 +130,7 @@ const SignIn = () => {
                     Username
                   </p>
                   <input
-                    onChange={(user)=>{
-                      setUsername(user.target.value)
-                    }}
+                    onChange={(user) => setUsername(user.target.value)}
                     value={username}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="text"
@@ -191,9 +150,7 @@ const SignIn = () => {
                     Password
                   </p>
                   <input
-                    onChange={(user)=>{
-                      setPassword(user.target.value)
-                    }}
+                    onChange={(user) => setPassword(user.target.value)}
                     value={password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="password"
@@ -209,7 +166,6 @@ const SignIn = () => {
 
                 <button
                   type="submit"
-                  onClick={login}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                 >
                   Sign In

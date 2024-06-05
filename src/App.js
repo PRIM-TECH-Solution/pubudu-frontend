@@ -15,6 +15,7 @@ import About from "./pages/About/About";
 import SignIn from "./pages/Account/SignIn";
 import SignUp from "./pages/Account/SignUp";
 import Cart from "./pages/Cart/Cart";
+import GuestBooking from "./pages/Guest Booking/GuestBooking";
 import Contact from "./pages/Contact/Contact";
 import Home from "./pages/Home/Home";
 import Checkout from "./pages/Checkout/Checkout";
@@ -70,6 +71,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
+      <Route path="/guestbooking" element={<GuestBooking />}></Route>
     </Route>
   )
 );

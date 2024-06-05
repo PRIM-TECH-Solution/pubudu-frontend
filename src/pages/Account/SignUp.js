@@ -21,7 +21,7 @@ const SignUp = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [successMsg, setSuccessMsg] = useState("");
+  const [successMsg] = useState("");
   const [checked, setChecked] = useState(false);
 
   const handleChange = (e) => {
