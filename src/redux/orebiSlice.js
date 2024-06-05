@@ -35,18 +35,18 @@ export const orebiSlice = createSlice({
       );
       if (item) {
         item.quantity++;
-        // Dispatch a success toast
+        toast.success("Product quantity increased");
       }
     },
     decreaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item._id === action.payload._id
       );
-      if (item.quantity === 1) {
-        item.quantity = 1;
-      } else {
-        item.quantity--;
-        // Dispatch a success toast
+      if (item) {
+        if (item.quantity > 1) {
+          item.quantity--;
+          toast.success("Product quantity decreased");
+        }
       }
     },
     deleteItem: (state, action) => {
@@ -59,6 +59,7 @@ export const orebiSlice = createSlice({
     resetCart: (state) => {
       state.products = [];
       // Dispatch a success toast
+      toast.success("Cart reset");
     },
 
     toggleBrand: (state, action) => {
