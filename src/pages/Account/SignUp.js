@@ -8,6 +8,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   
   const [user, setUser] = useState({
+    
     first_name: "",
     last_name: "",
     email: "",
@@ -21,8 +22,9 @@ const SignUp = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [successMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [checked, setChecked] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,8 +38,8 @@ const SignUp = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!user.first_name) newErrors.first_name = "Enter your first_name";
-    if (!user.last_name) newErrors.last_name = "Enter your last_name";
+    if (!user.first_name) newErrors.first_name = "Enter your first name";
+    if (!user.last_name) newErrors.last_name = "Enter your last name";
     if (!user.phone) newErrors.phone = "Enter your mobile number";
     if (!user.nic) newErrors.nic = "Enter your NIC number";
     if (!user.email) newErrors.email = "Enter your email";
@@ -52,29 +54,18 @@ const SignUp = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const saveUser = (e) => {
-  //   e.preventDefault();
-  //   if (!checked) return;
-
-  //   if (validateForm()) {
-  //     UserService.saveUser(user)
-  //       .then((response) => {
-  //         console.log(response);
-  //         navigate('/signin');
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // };
   const saveUser = (e) => {
     e.preventDefault();
-    if (!checked) return;
+    if (!checked) {
+      setError('Please accept the Terms of Use & Privacy Policy.');
+      return;
+    }
   
     if (validateForm()) {
       UserService.saveUser(user)
         .then((response) => {
           console.log('User saved:', response);
+          setSuccessMsg('User successfully created!');
           navigate('/signin');
         })
         .catch((error) => {
@@ -88,7 +79,6 @@ const SignUp = () => {
         });
     }
   };
-  
 
   return (
     <div className="w-full h-screen flex items-center justify-start">
@@ -168,53 +158,52 @@ const SignUp = () => {
                       className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                       type={field === "password" ? "password" : "text"}
                       placeholder={field.charAt(0).toUpperCase() + field.slice(1).replace("No", " Number")}
-                      />
-                      {errors[field] && (
+                    />
+                    {errors[field] && (
                       <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
-                      <span className="font-bold italic mr-1">!</span>
-                      {errors[field]}
+                        <span className="font-bold italic mr-1">!</span>
+                        {errors[field]}
                       </p>
-                      )}
-                      </div>
-                      ))}
-                      <div className="flex items-center gap-2">
-                      <input
-                      onChange={(e) => setChecked(e.target.checked)}
-                      className="w-4 h-4"
-                      type="checkbox"
-                      />
-                      <p className="text-sm text-gray-600">
-                      I accept the{" "}
-                      <span className="font-semibold text-primeColor">Terms of Use</span> &{" "}
-                      <span className="font-semibold text-primeColor">Privacy Policy</span>
-                      </p>
-                      </div>
-                      <button
-                                     onClick={saveUser}
-                                     disabledelevation="true"
-                                     color="primary"
-                                     size="large"
-                                     type="submit"
-                                     variant="contained"
-                                     className="w-full h-10 bg-primeColor rounded-md text-gray-200 text-base font-titleFont font-semibold tracking-wide hover:bg-black hover:text-white duration-300"
-                                   >
-                      Sign up
-                      </button>
-                      <p className="text-sm text-center text-gray-600">
-                      Already have an account?{" "}
-                      <Link to="/signin">
-                      <span className="font-semibold text-primeColor hover:text-black hover:underline underline-offset-2 decoration-[1px] cursor-pointer duration-300">
+                    )}
+                  </div>
+                ))}
+                <div className="flex items-center gap-2">
+                  <input
+                    onChange={(e) => setChecked(e.target.checked)}
+                    className="w-4 h-4"
+                    type="checkbox"
+                  />
+                  <p className="text-sm text-gray-600">
+                    I accept the{" "}
+                    <span className="font-semibold text-primeColor">Terms of Use</span> &{" "}
+                    <span className="font-semibold text-primeColor">Privacy Policy</span>
+                  </p>
+                </div>
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <button
+                  onClick={saveUser}
+                  disabled={!checked}
+                  className={`w-full h-10 rounded-md text-gray-200 text-base font-titleFont font-semibold tracking-wide duration-300 ${
+                    checked ? 'bg-primeColor hover:bg-black hover:text-white' : 'bg-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Sign up
+                </button>
+                <p className="text-sm text-center text-gray-600">
+                  Already have an account?{" "}
+                  <Link to="/signin">
+                    <span className="font-semibold text-primeColor hover:text-black hover:underline underline-offset-2 decoration-[1px] cursor-pointer duration-300">
                       Sign in
-                      </span>
-                      </Link>
-                      </p>
-                      </div>
-                      </div>
-                      </form>
-                      )}
-                      </div>
-                      </div>
-                      );
-                      };
-                      
-                      export default SignUp;
+                    </span>
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SignUp;
