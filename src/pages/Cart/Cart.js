@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Remove curly braces
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
@@ -16,9 +16,9 @@ const Cart = () => {
   const [totalAmt, setTotalAmt] = useState(0);
   const [shippingCharge, setShippingCharge] = useState(0);
   const [ticketDetails, setTicketDetails] = useState([]);
-  const [selectedTickets, setSelectedTickets] = useState([]); // State for selected tickets
-  const [showPopup, setShowPopup] = useState(false); // State for login popup visibility
-  const [showWarningPopup, setShowWarningPopup] = useState(false); // State for warning popup visibility
+  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showWarningPopup, setShowWarningPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +42,6 @@ const Cart = () => {
   }, [products]);
 
   const handleQuantityChange = (newSelectedTickets) => {
-    // Filter out tickets with zero quantity
     const nonZeroTickets = newSelectedTickets.filter(ticket => ticket.quantity > 0);
     setSelectedTickets(nonZeroTickets);
 
@@ -71,13 +70,13 @@ const Cart = () => {
       setShowWarningPopup(true);
       return;
     }
-    
+
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         if (decodedToken.user_id) {
-          navigate("/checkout");
+          navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails } });
           return;
         }
       } catch (error) {
@@ -140,20 +139,19 @@ const Cart = () => {
         </motion.div>
       )}
       <LoginPopup show={showPopup} onClose={() => setShowPopup(false)} />
-        {showWarningPopup && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded shadow-lg text-center"> {/* Center text and content */}
+      {showWarningPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded shadow-lg text-center">
             <p className="text-2xl font-bold">Please select your ticket</p>
-              <button
-                onClick={() => setShowWarningPopup(false)}
-                className="mt-4 px-8 py-2 font-bold bg-primeColor text-orange-400 rounded mx-auto" // Center button and change text color to orange
-                >
-                Close
-              </button>
+            <button
+              onClick={() => setShowWarningPopup(false)}
+              className="mt-4 px-8 py-2 font-bold bg-primeColor text-orange-400 rounded mx-auto"
+            >
+              Close
+            </button>
           </div>
         </div>
-  )}
-
+      )}
     </div>
   );
 };
