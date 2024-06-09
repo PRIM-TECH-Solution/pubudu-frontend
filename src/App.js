@@ -22,78 +22,54 @@ import Home from "./pages/Home/Home";
 import Download from "./pages/Download/Download";
 import Checkout from "./pages/Checkout/Checkout";
 import Offer from "./pages/Offer/Offer";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Payment from "./pages/payment/Payment";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Shop from "./pages/Shop/Shop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainComponent from "./components/home/Products/MainComponent";
-import CreateEvent from "./pages/Admin/CreateEvent";
-import EventList from "./pages/Admin/EventList";
-import AdminPanel from "./pages/Admin/AdminPanel";
-import Services from "./pages/Admin/Services";
-import {jwtDecode} from "jwt-decode"; 
-
-
-const token = localStorage.getItem('token');
-let userRole = '';
-
-if (token) {
-  try {
-    const decoded = jwtDecode(token);
-    userRole = decoded.role;
-  } catch (error) {
-    console.error('Invalid token', error);
-    localStorage.removeItem('token');
-  }
-}
-
-const isAdmin = userRole === 'ADMIN';
-
-const Layout = () => (
-  <div>
-    <ToastContainer
-      position="top-right"
-      autoClose={1000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="colored"
-    />
-    <Header />
-    <HeaderBottom />
-    <SpecialCase />
-    <ScrollRestoration />
-    <Outlet />
-    <Footer />
-    <FooterBottom />
-  </div>
-);
-
-const AdminRoute = ({ element }) => {
-  return isAdmin ? element : <Navigate to="/" />;
+const Layout = () => {
+  return (
+    <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <Header />
+      <HeaderBottom />
+      <SpecialCase />
+      <ScrollRestoration />
+      <Outlet />
+      <Footer />
+      <FooterBottom />
+    </div>
+  );
 };
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/download" element={<Download />} />
+        {/* ==================== Header Navlink Start here =================== */}
+        <Route index element={<Home />}></Route>
+        <Route path="/shop" element={<Shop />}></Route>
+        <Route path="/about" element={<About />}></Route>
+        <Route path="/contact" element={<Contact />}></Route>
+        <Route path="/checkout" element={<Checkout />}></Route>
+        {/* ==================== Header Navlink End here ===================== */}
         <Route path="/category/:category" element={<Offer />}></Route>
-        <Route path="/product/:_id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/paymentgateway" element={<Payment />} />
-        <Route path="/products" element={<MainComponent />} />
+        <Route path="/product/:_id" element={<ProductDetails />}></Route>
+        <Route path="/cart" element={<Cart />}></Route>
+        <Route path="/paymentgateway" element={<Payment />}></Route>
+        <Route path="/products" element={<MainComponent />}></Route> {/* New Route */}
       </Route>
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
