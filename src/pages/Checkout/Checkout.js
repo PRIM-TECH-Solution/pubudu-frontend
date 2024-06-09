@@ -16,6 +16,8 @@ const CheckoutPage = () => {
     email: "",
     phone: "",
     nic: "",
+    country: "",
+    city: "",
   });
 
   useEffect(() => {
@@ -49,6 +51,8 @@ const CheckoutPage = () => {
           email: userData.email,
           phone: userData.phone,
           nic: userData.nic,
+          country: userData.country,
+          city: userData.city,
         });
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -77,6 +81,11 @@ const CheckoutPage = () => {
     navigate("/cart");
   };
 
+  const generateUniqueOrderId = () => {
+    // Create a unique order ID using the current timestamp and a random number
+    return `ORDER-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  };
+
   const handleOrderSubmit = async () => {
     if (!agreedToTerms) {
       return;
@@ -91,25 +100,27 @@ const CheckoutPage = () => {
     const decodedToken = jwtDecode(token);
     const userId = decodedToken.user_id;
 
+    // Create a unique order ID
+    const orderId = generateUniqueOrderId();
+
+    // Create order data according to OrderSumEntity structure
     const orderData = {
-      timestamp: new Date().toISOString(),
-      userInfo: {
-        user_id: userId,
-      },
-      eventCards: selectedTickets.map((ticket) => ({
-        eventId: ticket.eventId,
-        ticketType: ticket.ticketType,
-        quantity: ticket.quantity,
-        price: ticketDetails.find(
-          (detail) => detail.ticketType === ticket.ticketType
-        ).ticketPrice,
-      })),
+      order_id: orderId, // Include the unique order ID
       amount: totalSubtotal,
-      paymentStatus: "Pending",
+      currency: "LKR",
+      nic: userDetails.nic,
+      first_name: userDetails.firstName,
+      last_name: userDetails.lastName,
+      email: userDetails.email,
+      phone: userDetails.phone,
+      address: userDetails.city,
+      city: userDetails.city,
+      country: userDetails.country,
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/orders/addOrder", orderData, {
+      // Post the order to the server
+      const response = await axios.post("http://localhost:8080/order-summary", orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -117,7 +128,8 @@ const CheckoutPage = () => {
       });
 
       console.log("Order created successfully:", response.data);
-      navigate("/order-confirmation", { state: { order: response.data } });
+      // Navigate to order confirmation page with the order data
+      navigate("/download", { state: { order: response.data } });
     } catch (error) {
       console.error("Error creating order:", error);
     }
@@ -131,52 +143,72 @@ const CheckoutPage = () => {
           <h2 className="font-bold text-3xl mb-4 underline">Billing Details</h2>
           <form className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="firstName" className="mb-1 font-semibold text-lg text-gray-700">First Name</label>
+              <label htmlFor="firstName" className="mb-1 font-semibold text-base text-gray-700">First Name</label>
               <input
                 id="firstName"
-                className="w-full p-2 border rounded text-lg"
+                className="w-full p-2 border rounded text-base"
                 type="text"
                 value={userDetails.firstName}
                 readOnly
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="lastName" className="mb-1 font-semibold text-lg text-gray-700">Last Name</label>
+              <label htmlFor="lastName" className="mb-1 font-semibold text-base text-gray-700">Last Name</label>
               <input
                 id="lastName"
-                className="w-full p-2 border rounded text-lg"
+                className="w-full p-2 border rounded text-base"
                 type="text"
                 value={userDetails.lastName}
                 readOnly
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="email" className="mb-1 font-semibold text-lg text-gray-700">Email Address</label>
+              <label htmlFor="email" className="mb-1 font-semibold text-base text-gray-700">Email Address</label>
               <input
                 id="email"
-                className="w-full p-2 border rounded text-lg"
+                className="w-full p-2 border rounded text-base"
                 type="email"
                 value={userDetails.email}
                 readOnly
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="phone" className="mb-1 font-semibold text-lg text-gray-700">Phone No</label>
+              <label htmlFor="phone" className="mb-1 font-semibold text-base text-gray-700">Phone No</label>
               <input
                 id="phone"
-                className="w-full p-2 border rounded text-lg"
+                className="w-full p-2 border rounded text-base"
                 type="text"
                 value={userDetails.phone}
                 readOnly
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="nic" className="mb-1 font-semibold text-lg text-gray-700">NIC / Passport / Driving License</label>
+              <label htmlFor="nic" className="mb-1 font-semibold text-base text-gray-700">NIC / Passport / Driving License</label>
               <input
                 id="nic"
-                className="w-full p-2 border rounded text-lg"
+                className="w-full p-2 border rounded text-base"
                 type="text"
                 value={userDetails.nic}
+                readOnly
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="country" className="mb-1 font-semibold text-base text-gray-700">Country</label>
+              <input
+                id="country"
+                className="w-full p-2 border rounded text-base"
+                type="text"
+                value={userDetails.country}
+                readOnly
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="city" className="mb-1 font-semibold text-base text-gray-700">City</label>
+              <input
+                id="city"
+                className="w-full p-2 border rounded text-base"
+                type="text"
+                value={userDetails.city}
                 readOnly
               />
             </div>

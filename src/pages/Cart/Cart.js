@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Remove curly braces
+import {jwtDecode} from "jwt-decode"; // Ensure jwt-decode is imported
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
@@ -65,24 +65,43 @@ const Cart = () => {
     }
   }, [totalAmt]);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    // Check if there are selected tickets
     if (selectedTickets.length === 0) {
       setShowWarningPopup(true);
       return;
     }
 
+    // Get token from localStorage
     const token = localStorage.getItem("token");
     if (token) {
       try {
+        // Decode the token
         const decodedToken = jwtDecode(token);
-        if (decodedToken.user_id) {
+
+        // Fetch user information based on the token
+        const userId = decodedToken.user_id; // Assuming the token contains the user ID
+
+        // Fetch the user information to validate the token
+        const response = await axios.get(`http://localhost:8080/auth/getUsername/${userId}`);
+        
+        // If user exists and valid, navigate to checkout
+        if (response.data && response.status === 200) {
           navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails } });
           return;
         }
+
       } catch (error) {
-        console.error("Invalid token", error);
+        // Handle different error cases
+        if (error.response && error.response.status === 404) {
+          console.error("User not found. Please log in again.");
+        } else {
+          console.error("Invalid token or other error", error);
+        }
       }
     }
+    
+    // Show login popup if no valid token is found or user is not found
     setShowPopup(true);
   };
 
@@ -138,7 +157,9 @@ const Cart = () => {
           </div>
         </motion.div>
       )}
+      {/* Show the LoginPopup if showPopup is true */}
       <LoginPopup show={showPopup} onClose={() => setShowPopup(false)} />
+      {/* Show a warning popup if there are no selected tickets */}
       {showWarningPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-lg text-center">

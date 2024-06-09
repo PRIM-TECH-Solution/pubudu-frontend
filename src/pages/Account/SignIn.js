@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";  // Use named import instead of default import
 
 const SignIn = () => {
   const [errUsername, setErrUsername] = useState("");
@@ -12,18 +13,28 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+    setErrUsername("");
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+    setErrPassword("");
+  };
+
   const login = async (e) => {
     e.preventDefault();
     
-    setErrUsername("");
-    setErrPassword("");
+    setErrUsername('');
+    setErrPassword('');
   
     if (!username) {
       setErrUsername("Enter your Username");
       return;
     }
     if (!password) {
-      setErrPassword("Create a password");
+      setErrPassword("Enter your Password");
       return;
     }
   
@@ -38,9 +49,20 @@ const SignIn = () => {
   
       if (message.startsWith("Login successful")) {
         const token = message.split("Token: ")[1];
-        localStorage.setItem("token", token);
-        setSuccessMsg("Login successful!");
-        navigate("/");
+        localStorage.setItem('token', token);
+
+        
+
+        const decoded = jwtDecode(token);  // Use jwtDecode instead of jwt_decode
+        const userRole = decoded.role;
+
+        if (userRole === 'ADMIN') {
+          navigate('/admindashboard');
+        } else if (userRole === 'USER') {
+          navigate('/');
+        } else {
+          navigate('/');
+        }
       } else {
         alert(message);
       }
@@ -54,34 +76,53 @@ const SignIn = () => {
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
         <div className="w-[450px] h-full bg-primeColor px-10 flex flex-col gap-6 justify-center">
           <Link to="/">
-            <h1 className="font-titleFont text-3xl font-medium">EasyTicket.LK</h1>
+            <h1 className="font-titleFont text-3xl font-medium">
+              EasyTicket.LK
+            </h1>
           </Link>
           <div className="flex flex-col gap-1 -mt-1">
-            <h1 className="font-titleFont text-xl font-medium">Stay signed in for more</h1>
+            <h1 className="font-titleFont text-xl font-medium">
+              Stay signed in for more
+            </h1>
             <p className="text-base">When you sign in, you are with us!</p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
+            <span className="text-green-500 mt-1">
+              <BsCheckCircleFill />
+            </span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">Get Started Browsing Events with EasyTicket.LK</span>
+              <span className="text-white font-semibold font-titleFont">
+                Get Started Browsing Events with EasyTicket.LK
+              </span>
               <br />
-              Unlock a world of entertainment and stay updated with the latest events. Sign in and start your adventure!
+              Unlock a world of entertainment and stay updated with the latest events.
+              Sign in and start your adventure!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
+            <span className="text-green-500 mt-1">
+              <BsCheckCircleFill />
+            </span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">Enjoy Seamless Event Booking with EasyTicket.LK</span>
+              <span className="text-white font-semibold font-titleFont">
+                Enjoy Seamless Event Booking with EasyTicket.LK
+              </span>
               <br />
-              Access exclusive events and enjoy a hassle-free booking experience. Sign in and never miss out!
+              Access exclusive events and enjoy a hassle-free booking experience.
+              Sign in and never miss out!
             </p>
           </div>
           <div className="w-[300px] flex items-start gap-3">
-            <span className="text-green-500 mt-1"><BsCheckCircleFill /></span>
+            <span className="text-green-500 mt-1">
+              <BsCheckCircleFill />
+            </span>
             <p className="text-base text-gray-300">
-              <span className="text-white font-semibold font-titleFont">Stay Connected with EasyTicket.LK</span>
+              <span className="text-white font-semibold font-titleFont">
+                Stay Connected with EasyTicket.LK
+              </span>
               <br />
-              Join our community and get the best deals on event tickets. Sign in and elevate your experience!
+              Join our community and get the best deals on event tickets.
+              Sign in and elevate your experience!
             </p>
           </div>
           <div className="flex items-center justify-between mt-10">
@@ -124,13 +165,12 @@ const SignIn = () => {
                 Sign in
               </h1>
               <div className="flex flex-col gap-3">
-                {/* Username */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Username
                   </p>
                   <input
-                    onChange={(user) => setUsername(user.target.value)}
+                    onChange={handleUsername}
                     value={username}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="text"
@@ -144,13 +184,12 @@ const SignIn = () => {
                   )}
                 </div>
 
-                {/* Password */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Password
                   </p>
                   <input
-                    onChange={(user) => setPassword(user.target.value)}
+                    onChange={handlePassword}
                     value={password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="password"
