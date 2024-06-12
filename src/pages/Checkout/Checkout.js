@@ -3,10 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Ensure jwt-decode is imported
 
 const CheckoutPage = () => {
   const location = useLocation();
+  const { eventId } = location.state;
   const navigate = useNavigate();
   const { selectedTickets, ticketDetails } = location.state || {};
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -83,7 +84,7 @@ const CheckoutPage = () => {
 
   const generateUniqueOrderId = () => {
     // Create a unique order ID using the current timestamp and a random number
-    return `ORDER-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    return `${Date.now()}${Math.floor(Math.random() * 10000)}`;
   };
 
   const handleOrderSubmit = async () => {
@@ -104,7 +105,7 @@ const CheckoutPage = () => {
     const orderId = generateUniqueOrderId();
 
     // Create order data according to OrderSumEntity structure
-    const orderData = {
+    const orderSummaryData = {
       order_id: orderId, // Include the unique order ID
       amount: totalSubtotal,
       currency: "LKR",
@@ -119,17 +120,37 @@ const CheckoutPage = () => {
     };
 
     try {
-      // Post the order to the server
-      const response = await axios.post("http://localhost:8080/order-summary", orderData, {
+      // Post the order to the order-summary endpoint
+      const orderSummaryResponse = await axios.post("http://localhost:8080/order-summary", orderSummaryData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      console.log("Order created successfully:", response.data);
+      console.log("Order summary created successfully:", orderSummaryResponse.data);
+
+      // Create order data for the orders/add endpoint
+      const orderData = {
+        orderId: orderId,
+        userId: userId,
+        eventId: eventId, // Assuming eventId is passed in location.state
+        amount: totalSubtotal,
+        paymentStatus: "PAID", // Assuming the payment is made successfully
+      };
+
+      // Post the order to the orders/add endpoint
+      const orderResponse = await axios.post("http://localhost:8080/orders/add", orderData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Order created successfully:", orderResponse.data);
+
       // Navigate to order confirmation page with the order data
-      navigate("/download", { state: { order: response.data } });
+      navigate("/download", { state: { order: orderSummaryResponse.data } });
     } catch (error) {
       console.error("Error creating order:", error);
     }

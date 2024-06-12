@@ -87,7 +87,7 @@ const Cart = () => {
         
         // If user exists and valid, navigate to checkout
         if (response.data && response.status === 200) {
-          navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails } });
+          navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails, eventId: products[0]?.eventId } });
           return;
         }
 
