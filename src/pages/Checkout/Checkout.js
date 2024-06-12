@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Import jwtDecode correctly
+import {jwtDecode} from "jwt-decode"; // Ensure jwt-decode is imported
 
 const CheckoutPage = () => {
   const location = useLocation();
-  const { eventId } = location.state || {};
+  const {eventId} = location.state;
   const navigate = useNavigate();
   const { selectedTickets, ticketDetails } = location.state || {};
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -154,7 +154,7 @@ const CheckoutPage = () => {
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
-        { name: "return_url", value: `http://localhost:3000/download/${orderId}` },
+        { name: "return_url", value: `http://localhost:3000/download` },
         { name: "cancel_url", value: `http://localhost:3000/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
         { name: "notify_url", value: "http://localhost:8080/payment/notify" },
         { name: "order_id", value: orderId },
