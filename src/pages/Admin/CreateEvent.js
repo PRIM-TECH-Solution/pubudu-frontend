@@ -3,6 +3,8 @@ import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import EventService from "../../services/EventService";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -43,6 +45,16 @@ const CreateEvent = () => {
     const { name, value } = e.target;
     setEvent({ ...event, [name]: value });
     setErrors({ ...errors, [name]: "" });
+  };
+
+  const handleDateChange = (date) => {
+    setEvent({ ...event, eventDate: date });
+    setErrors({ ...errors, eventDate: "" });
+  };
+
+  const handleTimeChange = (time) => {
+    setEvent({ ...event, eventTime: time });
+    setErrors({ ...errors, eventTime: "" });
   };
 
   const handleTicketChange = (index, e) => {
@@ -174,12 +186,12 @@ const CreateEvent = () => {
           </div>
         ) : (
           <form className="w-full lgl:w-[500px] h-screen flex items-center justify-center">
-                        <div className="px-6 py-4 w-full h-[96%] flex flex-col justify-start overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
+            <div className="px-6 py-4 w-full h-[96%] flex flex-col justify-start overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-2xl mdl:text-3xl mb-4">
                 Create an Event
               </h1>
               <div className="flex flex-col gap-3">
-                {["eventId", "organizerName", "organizerEmail", "organizerNic", "organizerPhone", "eventName", "eventCategory", "eventDate", "eventTime", "eventLocation", "eventDescription", "flyerLink"].map((field) => (
+                {["eventId", "organizerName", "organizerEmail", "organizerNic", "organizerPhone", "eventName", "eventLocation", "eventDescription", "flyerLink"].map((field) => (
                   <div key={field} className="flex flex-col gap-.5">
                     <p className="font-titleFont text-base font-semibold text-gray-600">
                       {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1').trim()}
@@ -200,6 +212,71 @@ const CreateEvent = () => {
                     )}
                   </div>
                 ))}
+
+                <div className="flex flex-col gap-.5">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Event Category
+                  </p>
+                  <select
+                    name="eventCategory"
+                    value={event.eventCategory}
+                    onChange={handleEventChange}
+                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Music">Music</option>
+                    <option value="Concerts">Concerts</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Exhibition">Exhibition</option>
+                    <option value="Sports">Sports</option>
+                  </select>
+                  {errors.eventCategory && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errors.eventCategory}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-.5">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Event Date
+                  </p>
+                  <DatePicker
+                    selected={event.eventDate}
+                    onChange={handleDateChange}
+                    dateFormat="yyyy-MM-dd"
+                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                  />
+                  {errors.eventDate && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errors.eventDate}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-.5">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Event Time
+                  </p>
+                  <DatePicker
+                    selected={event.eventTime}
+                    onChange={handleTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                  />
+                  {errors.eventTime && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errors.eventTime}
+                    </p>
+                  )}
+                </div>
 
                 <p className="font-titleFont decoration-[1px]  text-2xl mdl:text-3xl ">
                   Ticket Details
@@ -259,4 +336,3 @@ const CreateEvent = () => {
 };
 
 export default CreateEvent;
-
