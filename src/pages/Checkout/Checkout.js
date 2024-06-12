@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Ensure jwt-decode is imported
+import {jwtDecode} from "jwt-decode"; // Import jwtDecode correctly
 
 const CheckoutPage = () => {
   const location = useLocation();
-  const { eventId } = location.state;
+  const { eventId } = location.state || {};
   const navigate = useNavigate();
   const { selectedTickets, ticketDetails } = location.state || {};
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -121,38 +121,70 @@ const CheckoutPage = () => {
 
     try {
       // Post the order to the order-summary endpoint
-      const orderSummaryResponse = await axios.post("http://localhost:8080/order-summary", orderSummaryData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const orderSummaryResponse = await axios.post(
+        "http://localhost:8080/order-summary",
+        orderSummaryData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       console.log("Order summary created successfully:", orderSummaryResponse.data);
 
-      // Create order data for the orders/add endpoint
-      const orderData = {
-        orderId: orderId,
-        userId: userId,
-        eventId: eventId, // Assuming eventId is passed in location.state
-        amount: totalSubtotal,
-        paymentStatus: "PAID", // Assuming the payment is made successfully
-      };
+      // Fetch the created order summary using the order ID
+      const orderDetailsResponse = await axios.get(
+        `http://localhost:8080/order-summary/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      // Post the order to the orders/add endpoint
-      const orderResponse = await axios.post("http://localhost:8080/orders/add", orderData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+      const orderDetails = orderDetailsResponse.data;
+      const { merchantId, hash } = orderDetails;
+
+      // Create and submit the Pay Here form
+      const payHereForm = document.createElement("form");
+      payHereForm.method = "POST";
+      payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
+
+      const inputs = [
+        { name: "merchant_id", value: merchantId },
+        { name: "return_url", value: `http://localhost:3000/download/${orderId}` },
+        { name: "cancel_url", value: `http://localhost:3000/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
+        { name: "notify_url", value: "http://localhost:8080/payment/notify" },
+        { name: "order_id", value: orderId },
+        { name: "items", value: "Ticket Purchase" },
+        { name: "currency", value: "LKR" },
+        { name: "amount", value: totalSubtotal },
+        { name: "first_name", value: userDetails.firstName },
+        { name: "last_name", value: userDetails.lastName },
+        { name: "email", value: userDetails.email },
+        { name: "phone", value: userDetails.phone },
+        { name: "address", value: userDetails.city },
+        { name: "city", value: userDetails.city },
+        { name: "country", value: userDetails.country },
+        { name: "hash", value: hash },
+        { name: "NIC", value: userDetails.nic },
+      ];
+
+      inputs.forEach((inputData) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = inputData.name;
+        input.value = inputData.value;
+        payHereForm.appendChild(input);
       });
 
-      console.log("Order created successfully:", orderResponse.data);
-
-      // Navigate to order confirmation page with the order data
-      navigate("/download", { state: { order: orderSummaryResponse.data } });
+      document.body.appendChild(payHereForm);
+      payHereForm.submit();
     } catch (error) {
-      console.error("Error creating order:", error);
+      console.error("Error during order submission:", error);
+      navigate("/checkout", { state: { error: error.message } });
     }
   };
 
@@ -235,65 +267,49 @@ const CheckoutPage = () => {
             </div>
           </form>
         </div>
-
         <div className="w-full md:w-1/2 p-4">
-          <h2 className="font-bold text-3xl mb-4 underline">Booking Summary</h2>
-          {selectedTickets?.map((ticket, index) => (
-            <div key={index} className="flex justify-between py-2 border-b">
-              <div className="text-2xl">{ticket.quantity}x {ticket.ticketType}(s)</div>
-              <div className="text-2xl">{calculateSubtotal(ticket)} LKR</div>
-            </div>
-          ))}
-          <div className="flex justify-between py-2 border-b">
-            <div className="text-2xl">Sub Total</div>
-            <div className="text-2xl">{totalSubtotal} LKR</div>
+          <h2 className="font-bold text-3xl mb-4 underline">Order Summary</h2>
+          <div className="flex flex-col space-y-4">
+            {selectedTickets.map((ticket, index) => (
+              <div key={index} className="p-4 border rounded">
+                <h3 className="font-semibold text-lg">{ticket.ticketType}</h3>
+                <p className="text-gray-700">Quantity: {ticket.quantity}</p>
+                <p className="text-gray-700">Price: LKR {calculateSubtotal(ticket)}</p>
+              </div>
+            ))}
           </div>
-          <div className="flex justify-between py-2 border-b font-bold border-t-2 pt-4">
-            <div className="text-2xl bg-gray-200 p-2 rounded">Total</div>
-            <div className="text-2xl bg-gray-200 p-2 rounded">{totalSubtotal} LKR</div>
+          <div className="mt-4">
+            <h3 className="font-bold text-xl">Total: LKR {totalSubtotal}</h3>
           </div>
-          <div className="flex justify-center my-4">
-            <img src={paymentCard} alt="Payment Methods" className="h-8" />
-          </div>
-          
-          <div className="flex items-center my-4 justify-center">
-            <input 
-              type="checkbox" 
-              className="mr-2 justify-center" 
-              checked={agreedToTerms} 
-              onChange={() => setAgreedToTerms(!agreedToTerms)} 
+          <div className="mt-4 flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="agreeToTerms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="h-4 w-4"
             />
-            <p className="text-sm justify-center">
-              I accept and agree to{" "}
-              <button
-                onClick={(e) => e.preventDefault()}
-                className="text-blue-600 underline justify-center"
-              >
-                Terms and Conditions
-              </button>
-            </p>
+            <label htmlFor="agreeToTerms" className="text-gray-700">
+              I agree to the <span className="text-blue-500 underline cursor-pointer">Terms and Conditions</span>
+            </label>
           </div>
-          {!agreedToTerms && (
-            <p className="text-red-600 text-sm mt-4 text-center">
-              In order to proceed, you should agree to T & C by clicking the above box
-            </p>
-          )}
-          <div className="flex justify-center mt-6 space-x-4 ">
-            <button 
-              onClick={handleBack} 
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-            >
-              Back
-            </button>
-            <button 
-              onClick={handleOrderSubmit} // Update the onClick event
-              className={`bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded ${!agreedToTerms ? 'opacity-50 cursor-not-allowed' : ''}`} 
-              disabled={!agreedToTerms}
-            >
-              Proceed to pay
-            </button>
-          </div>
+          <button
+            onClick={handleOrderSubmit}
+            className="mt-4 w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            disabled={!agreedToTerms}
+          >
+            Place Order
+          </button>
+          <button
+            onClick={handleBack}
+            className="mt-2 w-full p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+          >
+            Back to Cart
+          </button>
         </div>
+      </div>
+      <div className="flex justify-center mt-8">
+        <img src={paymentCard} alt="payment methods" className="w-1/2 md:w-1/4" />
       </div>
     </div>
   );
