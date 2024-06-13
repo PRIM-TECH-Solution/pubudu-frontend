@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Correct import if jwtDecode is not a default export
 
 const CheckoutPage = () => {
   const location = useLocation();
@@ -117,6 +117,7 @@ const CheckoutPage = () => {
     };
 
     try {
+      // Create order summary
       const orderSummaryResponse = await axios.post(
         "http://localhost:8080/order-summary",
         orderSummaryData,
@@ -130,6 +131,7 @@ const CheckoutPage = () => {
 
       console.log("Order summary created successfully:", orderSummaryResponse.data);
 
+      // Fetch order details (if necessary)
       const orderDetailsResponse = await axios.get(
         `http://localhost:8080/order-summary/${orderId}`,
         {
@@ -142,13 +144,14 @@ const CheckoutPage = () => {
       const orderDetails = orderDetailsResponse.data;
       const { merchantId, hash } = orderDetails;
 
+      // Create and submit the PayHere form
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
       payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
-        { name: "return_url", value: `http://localhost:3000/download/` },
+        { name: "return_url", value: `http://localhost:3000/download` },
         { name: "cancel_url", value: `http://localhost:3000/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
         { name: "notify_url", value: "http://localhost:8080/payment/notify" },
         { name: "order_id", value: orderId },
@@ -176,8 +179,7 @@ const CheckoutPage = () => {
 
       document.body.appendChild(payHereForm);
 
-      payHereForm.submit();
-
+      // Create order in the backend
       const orderData = {
         orderId: orderId,
         userId: userId,
@@ -194,6 +196,12 @@ const CheckoutPage = () => {
       });
 
       console.log("Order created successfully:", orderResponse.data);
+
+      // Submit the PayHere form
+      payHereForm.submit();
+
+      // Navigate to the BookingSuccess page with the orderId
+      navigate("/download", { state: { orderId } });
 
     } catch (error) {
       console.error("Error during order submission:", error);
