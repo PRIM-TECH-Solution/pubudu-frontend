@@ -72,6 +72,7 @@ const Product = (props) => {
                     eventId: props.eventId,
                     ticketType: props.ticketType,
                     ticketPrice: props.ticketPrice,
+                    date:props.date,
                   })
                 )
               }

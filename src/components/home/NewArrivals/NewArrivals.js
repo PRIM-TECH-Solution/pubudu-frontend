@@ -91,6 +91,7 @@ const NewArrivals = () => {
               badge={true}
               ticketType={event.ticketType}
               ticketPrice={event.ticketPrice}
+              date={event.eventDate}
             />
           </div>
         ))}

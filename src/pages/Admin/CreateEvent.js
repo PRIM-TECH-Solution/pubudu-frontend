@@ -6,6 +6,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 const CreateEvent = () => {
   const navigate = useNavigate();
 
@@ -92,19 +93,29 @@ const CreateEvent = () => {
 
   const saveEvent = async (e) => {
     e.preventDefault();
-
+  
     if (validateForm()) {
       try {
-        const response = await EventService.addEvent(event);
+        // Format event date and time
+        const formattedDate = event.eventDate.toLocaleDateString('en-GB'); // Format: yyyy-MM-dd
+        const formattedTime = event.eventTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); // Format: h:mm aa
+  
+        const eventToSend = {
+          ...event,
+          eventDate: formattedDate,
+          eventTime: formattedTime
+        };
+  
+        const response = await EventService.addEvent(eventToSend);
         console.log('Event saved:', response);
         setSuccessMsg('Event successfully created!');
-
+  
         const ticketDetailsList = tickets.map((ticket) => ({
           eventId: event.eventId,
           ticketType: ticket.ticketType,
           ticketPrice: parseFloat(ticket.ticketPrice),
         }));
-
+  
         try {
           const token = localStorage.getItem('token');
           const ticketResponse = await axios.post('http://localhost:8080/ticketDetails/add', ticketDetailsList, {
@@ -124,6 +135,8 @@ const CreateEvent = () => {
       }
     }
   };
+  
+  
 
   return (
     <div className="w-full h-screen flex items-center justify-start">
