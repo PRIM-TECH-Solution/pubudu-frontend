@@ -24,6 +24,7 @@ const Product = (props) => {
     navigate(`/product/${rootId}`, {
       state: {
         item: productItem,
+        eventId: props.eventId, // Passing eventId to the product details page
       },
     });
   };
@@ -32,17 +33,18 @@ const Product = (props) => {
     navigate("/download", {
       state: {
         eventName: props.productName,
-        eventDate: props.date, // Ensure to pass the correct date prop
+        eventDate: props.date,
         eventLocation: props.location,
         eventTime: props.time,
         flyerLink: props.img,
+        eventId: props.eventId, // Ensure to pass the eventId
       },
     });
   };
 
   const handleWishList = () => {
     toast.success("Event added to wish List");
-    setWishList(wishList.push(props));
+    setWishList([...wishList, props]); // Correcting wishList state update
     console.log(wishList);
   };
 
@@ -72,7 +74,7 @@ const Product = (props) => {
                     eventId: props.eventId,
                     ticketType: props.ticketType,
                     ticketPrice: props.ticketPrice,
-                    date:props.date,
+                    date: props.date,
                   })
                 )
               }

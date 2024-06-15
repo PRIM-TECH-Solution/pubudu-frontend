@@ -1,9 +1,11 @@
+// Cart Component
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Ensure jwt-decode is imported
+import {jwtDecode} from "jwt-decode";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
@@ -26,12 +28,12 @@ const Cart = () => {
       try {
         const eventIds = products.map((item) => item.eventId);
         const responses = await Promise.all(
-          eventIds.map(eventId =>
+          eventIds.map((eventId) =>
             axios.get(`http://localhost:8080/eventcards/customTicketDetails/${eventId}`)
           )
         );
 
-        const fetchedDetails = responses.flatMap(response => response.data);
+        const fetchedDetails = responses.flatMap((response) => response.data);
         setTicketDetails(fetchedDetails);
       } catch (error) {
         console.error("Error fetching ticket details:", error);
@@ -42,12 +44,12 @@ const Cart = () => {
   }, [products]);
 
   const handleQuantityChange = (newSelectedTickets) => {
-    const nonZeroTickets = newSelectedTickets.filter(ticket => ticket.quantity > 0);
+    const nonZeroTickets = newSelectedTickets.filter((ticket) => ticket.quantity > 0);
     setSelectedTickets(nonZeroTickets);
 
     let newTotalAmt = 0;
-    nonZeroTickets.forEach(ticket => {
-      const ticketDetail = ticketDetails.find(detail => detail.ticketType === ticket.ticketType);
+    nonZeroTickets.forEach((ticket) => {
+      const ticketDetail = ticketDetails.find((detail) => detail.ticketType === ticket.ticketType);
       if (ticketDetail) {
         newTotalAmt += ticketDetail.ticketPrice * ticket.quantity;
       }
@@ -66,33 +68,25 @@ const Cart = () => {
   }, [totalAmt]);
 
   const handleCheckout = async () => {
-    // Check if there are selected tickets
     if (selectedTickets.length === 0) {
       setShowWarningPopup(true);
       return;
     }
 
-    // Get token from localStorage
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        // Decode the token
         const decodedToken = jwtDecode(token);
+        const userId = decodedToken.user_id;
 
-        // Fetch user information based on the token
-        const userId = decodedToken.user_id; // Assuming the token contains the user ID
-
-        // Fetch the user information to validate the token
         const response = await axios.get(`http://localhost:8080/auth/getUsername/${userId}`);
         
-        // If user exists and valid, navigate to checkout
         if (response.data && response.status === 200) {
           navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails, eventId: products[0]?.eventId } });
           return;
         }
 
       } catch (error) {
-        // Handle different error cases
         if (error.response && error.response.status === 404) {
           console.error("User not found. Please log in again.");
         } else {
@@ -101,7 +95,6 @@ const Cart = () => {
       }
     }
     
-    // Show login popup if no valid token is found or user is not found
     setShowPopup(true);
   };
 
@@ -157,9 +150,7 @@ const Cart = () => {
           </div>
         </motion.div>
       )}
-      {/* Show the LoginPopup if showPopup is true */}
       <LoginPopup show={showPopup} onClose={() => setShowPopup(false)} />
-      {/* Show a warning popup if there are no selected tickets */}
       {showWarningPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-lg text-center">

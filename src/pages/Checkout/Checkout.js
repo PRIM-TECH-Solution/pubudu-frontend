@@ -7,9 +7,8 @@ import {jwtDecode} from "jwt-decode"; // Correct import if jwtDecode is not a de
 
 const CheckoutPage = () => {
   const location = useLocation();
-  const { eventId } = location.state || {};
+  const { eventId, selectedTickets, ticketDetails } = location.state || {}; // Destructure eventId
   const navigate = useNavigate();
-  const { selectedTickets, ticketDetails } = location.state || {};
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [userDetails, setUserDetails] = useState({
     firstName: "",
@@ -114,12 +113,14 @@ const CheckoutPage = () => {
       address: userDetails.city,
       city: userDetails.city,
       country: userDetails.country,
+      event_id: eventId, // Include eventId in the order data
+      status: "PENDING"
     };
 
     try {
       // Create order summary
       const orderSummaryResponse = await axios.post(
-        "http://localhost:8080/order-summary",
+        "http://localhost:8081/order-summary/order",
         orderSummaryData,
         {
           headers: {
@@ -183,7 +184,7 @@ const CheckoutPage = () => {
       const orderData = {
         orderId: orderId,
         userId: userId,
-        eventId: eventId,
+        eventId: eventId, // Pass eventId in the order creation
         amount: totalSubtotal,
         paymentStatus: "PAID",
       };
@@ -201,7 +202,7 @@ const CheckoutPage = () => {
       payHereForm.submit();
 
       // Navigate to the BookingSuccess page with the orderId
-      navigate("/download", { state: { orderId } });
+      navigate("/https://sandbox.payhere.lk/pay/checkout", { state: { orderId } });
 
     } catch (error) {
       console.error("Error during order submission:", error);
