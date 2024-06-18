@@ -87,6 +87,7 @@ const router = createBrowserRouter(
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/guestbooking" element={<GuestBooking />}/>
         <Route path="/download" element={<Download />} />
         <Route path="/category/:category" element={<Offer />}></Route>
         <Route path="/product/:_id" element={<ProductDetails />} />
@@ -96,7 +97,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
-      <Route path="/guestbooking" element={<GuestBooking />}></Route>
+      
       <Route path="/admindashboard" element={<AdminRoute element={<AdminDashboard />} />} />
       <Route path="/adminpanel" element={<AdminRoute element={<AdminPanel />} />} />
       <Route path="/eventcreation" element={<AdminRoute element={<CreateEvent />} />} />

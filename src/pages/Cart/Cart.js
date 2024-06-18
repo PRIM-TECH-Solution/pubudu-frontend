@@ -1,5 +1,3 @@
-// Cart Component
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -97,6 +95,13 @@ const Cart = () => {
     
     setShowPopup(true);
   };
+
+  // Cleanup effect to clear the cart when the component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(resetCart());
+    };
+  }, [dispatch]);
 
   return (
     <div className="max-w-container mx-auto px-4">

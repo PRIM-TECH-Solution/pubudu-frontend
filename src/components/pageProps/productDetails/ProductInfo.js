@@ -8,9 +8,13 @@ const ProductInfo = ({ productInfo }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  if (!productInfo) {
+    return null;
+  }
+
   const highlightStyle = {
-    color: "#d0121a", 
-    fontWeight: "bold", 
+    color: "#d0121a",
+    fontWeight: "bold",
   };
 
   const renderDescription = () => {
@@ -81,9 +85,8 @@ const ProductInfo = ({ productInfo }) => {
         onClick={handleBookTicket}
         className="w-full py-4 bg-blue-500 hover:bg-blue-600 duration-300 text-white text-lg font-titleFont"
       >
-        Book Your Ticket
+        Book Ticket
       </button>
-      
     </div>
   );
 };

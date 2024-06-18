@@ -4,10 +4,12 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode"; // Correct import if jwtDecode is not a default export
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CheckoutPage = () => {
   const location = useLocation();
-  const { eventId, selectedTickets, ticketDetails } = location.state || {}; // Destructure eventId
+  const { eventId, selectedTickets, ticketDetails } = location.state || {};
   const navigate = useNavigate();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -18,6 +20,7 @@ const CheckoutPage = () => {
     nic: "",
     country: "",
     city: "",
+    user_id: "",
   });
 
   useEffect(() => {
@@ -25,18 +28,22 @@ const CheckoutPage = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found");
-        return;
-      }
-
-      const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-
-      if (decodedToken.exp < currentTime) {
-        console.error("Token has expired");
+        navigate("/signin");
         return;
       }
 
       try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          console.error("Token has expired");
+          toast.error("Your session has timed out, please log in again.");
+          localStorage.removeItem("token");
+          setTimeout(() => navigate("/signin"), 3000);
+          return;
+        }
+
         const userId = decodedToken.user_id;
         const response = await axios.get(`http://localhost:8080/auth/getUser/${userId}`, {
           headers: {
@@ -53,14 +60,16 @@ const CheckoutPage = () => {
           nic: userData.nic,
           country: userData.country,
           city: userData.city,
+          user_id: userData.user_id,
         });
+        console.log("User details fetched successfully:", userData);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
     };
 
     fetchUserDetails();
-  }, []);
+  }, [navigate]);
 
   const calculateSubtotal = (ticket) => {
     if (ticket && ticket.ticketType) {
@@ -85,6 +94,16 @@ const CheckoutPage = () => {
     return `${Date.now()}${Math.floor(Math.random() * 10000)}`;
   };
 
+  const createTicketTypesArray = (tickets) => {
+    let ticketTypesArray = [];
+    tickets.forEach(ticket => {
+      for (let i = 0; i < ticket.quantity; i++) {
+        ticketTypesArray.push(ticket.ticketType);
+      }
+    });
+    return ticketTypesArray;
+  };
+
   const handleOrderSubmit = async () => {
     if (!agreedToTerms) {
       return;
@@ -96,29 +115,43 @@ const CheckoutPage = () => {
       return;
     }
 
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.user_id;
-
-    const orderId = generateUniqueOrderId();
-
-    const orderSummaryData = {
-      order_id: orderId,
-      amount: totalSubtotal,
-      currency: "LKR",
-      nic: userDetails.nic,
-      first_name: userDetails.firstName,
-      last_name: userDetails.lastName,
-      email: userDetails.email,
-      phone: userDetails.phone,
-      address: userDetails.city,
-      city: userDetails.city,
-      country: userDetails.country,
-      event_id: eventId, // Include eventId in the order data
-      status: "PENDING"
-    };
-
     try {
-      // Create order summary
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decodedToken.exp < currentTime) {
+        console.error("Token has expired");
+        toast.error("Your session has timed out, please log in again.");
+        localStorage.removeItem("token");
+        setTimeout(() => navigate("/signin"), 3000);
+        return;
+      }
+
+      const userId = decodedToken.user_id;
+
+      const orderId = generateUniqueOrderId();
+
+      const ticketTypesArray = createTicketTypesArray(selectedTickets);
+
+      const orderSummaryData = {
+        order_id: orderId.toString(),
+        amount: totalSubtotal.toString(),
+        currency: "LKR",
+        user_id: userId.toString(),
+        NIC: userDetails.nic.toString(),
+        first_name: userDetails.firstName,
+        last_name: userDetails.lastName,
+        email: userDetails.email,
+        phone: userDetails.phone.toString(),
+        address: userDetails.city,
+        city: userDetails.city,
+        country: userDetails.country,
+        event_id: eventId.toString(),
+        status: "PENDING",
+        ticketTypes: ticketTypesArray
+      };
+      console.log("Order Summary Data:", orderSummaryData);
+
       const orderSummaryResponse = await axios.post(
         "http://localhost:8081/order-summary/order",
         orderSummaryData,
@@ -132,9 +165,8 @@ const CheckoutPage = () => {
 
       console.log("Order summary created successfully:", orderSummaryResponse.data);
 
-      // Fetch order details (if necessary)
       const orderDetailsResponse = await axios.get(
-        `http://localhost:8080/order-summary/${orderId}`,
+        `http://localhost:8081/order-summary/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -145,7 +177,6 @@ const CheckoutPage = () => {
       const orderDetails = orderDetailsResponse.data;
       const { merchantId, hash } = orderDetails;
 
-      // Create and submit the PayHere form
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
       payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
@@ -180,11 +211,10 @@ const CheckoutPage = () => {
 
       document.body.appendChild(payHereForm);
 
-      // Create order in the backend
       const orderData = {
-        orderId: orderId,
-        userId: userId,
-        eventId: eventId, // Pass eventId in the order creation
+        orderId: orderId.toString(),
+        userId: userId.toString(),
+        eventId: eventId.toString(),
         amount: totalSubtotal,
         paymentStatus: "PAID",
       };
@@ -198,12 +228,7 @@ const CheckoutPage = () => {
 
       console.log("Order created successfully:", orderResponse.data);
 
-      // Submit the PayHere form
       payHereForm.submit();
-
-      // Navigate to the BookingSuccess page with the orderId
-      navigate("/https://sandbox.payhere.lk/pay/checkout", { state: { orderId } });
-
     } catch (error) {
       console.error("Error during order submission:", error);
       navigate("/checkout", { state: { error: error.message } });
@@ -212,12 +237,12 @@ const CheckoutPage = () => {
 
   return (
     <div className="max-w-container mx-auto px-4">
+      <ToastContainer />
       <Breadcrumbs title="Checkout" prevLocation="Select Your Tickets" />
       <div className="flex flex-col md:flex-row w-full py-4">
         <div className="w-full md:w-1/2 p-4 border-r">
           <h2 className="font-bold text-3xl mb-4 underline">Billing Details</h2>
           <form className="space-y-4">
-            {/* Render user details as readonly fields */}
             {Object.keys(userDetails).map((key) => (
               <div key={key} className="flex flex-col">
                 <label htmlFor={key} className="mb-1 font-semibold text-base text-gray-700">
