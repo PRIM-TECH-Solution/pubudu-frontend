@@ -3,6 +3,7 @@ import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { jwtDecode } from "jwt-decode";  // Use named import instead of default import
 
 const SignIn = () => {
@@ -11,6 +12,8 @@ const SignIn = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);  // New loading state
+  const [showPassword, setShowPassword] = useState(false);  // New state for password visibility
   const navigate = useNavigate();
 
   const handleUsername = (e) => {
@@ -23,6 +26,14 @@ const SignIn = () => {
     setErrPassword("");
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // const handleGoogleSignIn = () => {
+  //   window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  // };
+  
   const login = async (e) => {
     e.preventDefault();
     
@@ -37,7 +48,9 @@ const SignIn = () => {
       setErrPassword("Enter your Password");
       return;
     }
-  
+
+    setLoading(true);  // Show loading indicator
+
     try {
       const res = await axios.post("http://localhost:8080/auth/login", {
         username,
@@ -50,8 +63,6 @@ const SignIn = () => {
       if (message.startsWith("Login successful")) {
         const token = message.split("Token: ")[1];
         localStorage.setItem('token', token);
-
-        
 
         const decoded = jwtDecode(token);  // Use jwtDecode instead of jwt_decode
         const userRole = decoded.role;
@@ -68,6 +79,8 @@ const SignIn = () => {
       }
     } catch (err) {
       alert("An error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);  // Hide loading indicator
     }
   };
 
@@ -174,7 +187,7 @@ const SignIn = () => {
                     value={username}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your username"
                   />
                   {errUsername && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
@@ -184,7 +197,7 @@ const SignIn = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-.5">
+                <div className="flex flex-col gap-.5 relative">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Password
                   </p>
@@ -192,9 +205,12 @@ const SignIn = () => {
                     onChange={handlePassword}
                     value={password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="password"
-                    placeholder="Create password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
                   />
+                  <div className="absolute right-3 top-9 cursor-pointer" onClick={togglePasswordVisibility}>
+                    {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                  </div>
                   {errPassword && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>
@@ -205,10 +221,19 @@ const SignIn = () => {
 
                 <button
                   type="submit"
-                  className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
+                  className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md duration-300"
+                  disabled={loading}
                 >
-                  Sign In
+                  {loading ? 'Signing In...' : 'Sign In'}
                 </button>
+                {/* <button
+                  type="button"
+                  className="text-blue-600 hover:text-blaczzzk cursor-pointer w-full text-base font-medium h-10 rounded-md duration-300"
+                  onClick={handleGoogleSignIn}
+                >
+                  Continue with Google
+                </button> */}
+
                 <p className="text-sm text-center font-titleFont font-medium">
                   Don't have an Account?{" "}
                   <Link to="/signup">

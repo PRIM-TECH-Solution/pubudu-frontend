@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BsCheckCircleFill } from "react-icons/bs";
+import { BsCheckCircleFill, BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import UserService from "../../services/UserService";
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   
   const [user, setUser] = useState({
-    
     first_name: "",
     last_name: "",
     email: "",
@@ -18,13 +17,15 @@ const SignUp = () => {
     city: "",
     nic: "",
     phone: "",
-    role: "USER" // Adding the role attribute with a default value of "USER"
+    role: "USER"
   });
 
   const [errors, setErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
   const [checked, setChecked] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // New loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,6 +63,7 @@ const SignUp = () => {
     }
   
     if (validateForm()) {
+      setLoading(true); // Start loading
       UserService.saveUser(user)
         .then((response) => {
           console.log('User saved:', response);
@@ -76,8 +78,15 @@ const SignUp = () => {
             console.error('Error saving user:', error);
             alert('An error occurred while saving the user. Please try again later.');
           }
+        })
+        .finally(() => {
+          setLoading(false); // Stop loading
         });
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -146,18 +155,18 @@ const SignUp = () => {
                 Create your account
               </h1>
               <div className="flex flex-col gap-3">
-                {["first_name","last_name", "phone", "nic", "email","country","city", "username", "password"].map((field) => (
+                {["first_name", "last_name", "phone", "nic", "email", "country", "city", "username"].map((field) => (
                   <div key={field} className="flex flex-col gap-.5">
                     <p className="font-titleFont text-base font-semibold text-gray-600">
-                      {field.charAt(0).toUpperCase() + field.slice(1).replace("No", " Number")}
+                      {field.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                     </p>
                     <input
                       name={field}
                       value={user[field]}
                       onChange={handleChange}
                       className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                      type={field === "password" ? "password" : "text"}
-                      placeholder={field.charAt(0).toUpperCase() + field.slice(1).replace("No", " Number")}
+                      type="text"
+                      placeholder={`Enter your ${field.split('_').join(' ')}`}
                     />
                     {errors[field] && (
                       <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
@@ -167,6 +176,33 @@ const SignUp = () => {
                     )}
                   </div>
                 ))}
+                <div className="flex flex-col gap-.5 relative">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Password
+                  </p>
+                  <div className="relative">
+                    <input
+                      name="password"
+                      value={user.password}
+                      onChange={handleChange}
+                      className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a password"
+                    />
+                    <span
+                      onClick={togglePasswordVisibility}
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                    >
+                      {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+                    </span>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
                 <div className="flex items-center gap-2">
                   <input
                     onChange={(e) => setChecked(e.target.checked)}
@@ -182,12 +218,12 @@ const SignUp = () => {
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <button
                   onClick={saveUser}
-                  disabled={!checked}
+                  disabled={loading || !checked}
                   className={`w-full h-10 rounded-md text-gray-200 text-base font-titleFont font-semibold tracking-wide duration-300 ${
                     checked ? 'bg-primeColor hover:bg-black hover:text-white' : 'bg-gray-400 cursor-not-allowed'
                   }`}
                 >
-                  Sign up
+                  {loading ? 'Signing up...' : 'Sign up'} {/* Display loading text when loading */}
                 </button>
                 <p className="text-sm text-center text-gray-600">
                   Already have an account?{" "}

@@ -49,6 +49,7 @@ if (token) {
 }
 
 const isAdmin = userRole === 'ADMIN';
+const isUser = userRole === 'USER';
 
 const Layout = () => (
   <div>
@@ -75,7 +76,11 @@ const Layout = () => (
 );
 
 const AdminRoute = ({ element }) => {
-  return isAdmin ? element : <Navigate to="/" />;
+  return isAdmin ? element : <Navigate to="/admindashboard" />;
+};
+
+const UserRoute = ({ element }) => {
+  return isUser ? element : <Navigate to="/" />;
 };
 
 const router = createBrowserRouter(
@@ -86,12 +91,18 @@ const router = createBrowserRouter(
         <Route path="/shop" element={<Shop />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/checkout" element={<Checkout />} />
         <Route path="/guestbooking" element={<GuestBooking />}/>
-        <Route path="/download" element={<Download />} />
+        
+
+        <Route path="/checkout" element={<UserRoute element={<Checkout />} />} />
+        <Route path="/download" element={<UserRoute element={<Download />} />} />
+        <Route path="/cart" element={<UserRoute element={<Cart />} />} />
+
+        
+        
+        
         <Route path="/category/:category" element={<Offer />}></Route>
         <Route path="/product/:_id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/paymentgateway" element={<Payment />} />
         <Route path="/products" element={<MainComponent />} />
       </Route>
