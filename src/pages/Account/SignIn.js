@@ -31,7 +31,7 @@ const SignIn = () => {
   };
 
   // const handleGoogleSignIn = () => {
-  //   window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  //   window.location.href = "https://user-event.azurewebsites.net/oauth2/authorization/google";
   // };
   
   const login = async (e) => {
@@ -52,7 +52,7 @@ const SignIn = () => {
     setLoading(true);  // Show loading indicator
 
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", {
+      const res = await axios.post("https://user-event.azurewebsites.net/auth/login", {
         username,
         password,
       });

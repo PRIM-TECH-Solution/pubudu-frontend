@@ -12,7 +12,7 @@ const Pagination = ({ itemsPerPage }) => {
 
   const getData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/eventcards/getAll");
+      const response = await axios.get("https://user-event.azurewebsites.net/eventcards/getAll");
       setResponses(response.data);
       if (response.data != null) {
         const event = response.data.map((e) => ({

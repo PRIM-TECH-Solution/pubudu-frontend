@@ -45,7 +45,7 @@ const CheckoutPage = () => {
         }
 
         const userId = decodedToken.user_id;
-        const response = await axios.get(`http://localhost:8080/auth/getUser/${userId}`, {
+        const response = await axios.get(`https://user-event.azurewebsites.net/auth/getUser/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -183,9 +183,9 @@ const CheckoutPage = () => {
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
-        { name: "return_url", value: `http://localhost:3000/download` },
-        { name: "cancel_url", value: `http://localhost:3000/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
-        { name: "notify_url", value: "http://localhost:8080/payment/notify" },
+        { name: "return_url", value: `https://main--easyticketlk.netlify.app/download` },
+        { name: "cancel_url", value: `https://main--easyticketlk.netlify.app/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
+        { name: "notify_url", value: "https://user-event.azurewebsites.net/payment/notify" },
         { name: "order_id", value: orderId },
         { name: "items", value: "Ticket Purchase" },
         { name: "currency", value: "LKR" },
@@ -219,7 +219,7 @@ const CheckoutPage = () => {
         paymentStatus: "PAID",
       };
 
-      const orderResponse = await axios.post("http://localhost:8080/orders/add", orderData, {
+      const orderResponse = await axios.post("https://user-event.azurewebsites.net/orders/add", orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

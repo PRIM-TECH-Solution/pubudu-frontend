@@ -19,7 +19,7 @@ const HeaderBottom = () => {
 
   const getData = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8080/eventcards/getAll");
+      const response = await axios.get("https://user-event.azurewebsites.net/eventcards/getAll");
       if (response.data != null) {
         const eventList = response.data.map((e) => ({
           eventName: e.eventName,

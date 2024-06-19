@@ -84,7 +84,7 @@ const BookingSuccess = () => {
       const fetchEventDetails = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await axios.get(`http://localhost:8080/eventcards/${orderDetails.event_id}`, {
+          const response = await axios.get(`https://user-event.azurewebsites.net/eventcards/${orderDetails.event_id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",

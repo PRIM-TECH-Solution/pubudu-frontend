@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const USER_API_BASE_URL1="http://localhost:8080/contact/add"
+const USER_API_BASE_URL1="https://user-event.azurewebsites.net/contact/add"
 class ContactService{
     saveContact(contact){
         return axios.post(

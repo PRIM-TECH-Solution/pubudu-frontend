@@ -110,7 +110,7 @@ const CreateEvent = () => {
 
         try {
           const token = localStorage.getItem('token');
-          const ticketResponse = await axios.post('http://localhost:8080/ticketDetails/add', ticketDetailsList, {
+          const ticketResponse = await axios.post('https://user-event.azurewebsites.net/ticketDetails/add', ticketDetailsList, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

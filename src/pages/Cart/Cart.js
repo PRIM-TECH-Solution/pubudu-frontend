@@ -27,7 +27,7 @@ const Cart = () => {
         const eventIds = products.map((item) => item.eventId);
         const responses = await Promise.all(
           eventIds.map((eventId) =>
-            axios.get(`http://localhost:8080/eventcards/customTicketDetails/${eventId}`)
+            axios.get(`https://user-event.azurewebsites.net/eventcards/customTicketDetails/${eventId}`)
           )
         );
 
@@ -77,7 +77,7 @@ const Cart = () => {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.user_id;
 
-        const response = await axios.get(`http://localhost:8080/auth/getUsername/${userId}`);
+        const response = await axios.get(`https://user-event.azurewebsites.net/auth/getUsername/${userId}`);
         
         if (response.data && response.status === 200) {
           navigate("/checkout", { state: { selectedTickets, totalAmt, ticketDetails, eventId: products[0]?.eventId } });
