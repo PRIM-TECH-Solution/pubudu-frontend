@@ -96,7 +96,7 @@ const router = createBrowserRouter(
 
         <Route path="/checkout" element={<UserRoute element={<Checkout />} />} />
         <Route path="/download" element={<UserRoute element={<Download />} />} />
-        <Route path="/cart" element={<UserRoute element={<Cart />} />} />
+        <Route path="/cart" element={<Cart />} />
 
         
         
