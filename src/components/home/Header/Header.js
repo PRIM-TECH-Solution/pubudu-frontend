@@ -42,7 +42,7 @@ const Header = () => {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.user_id; // Adjust this to match the actual token structure
           if (userId) {
-            const response = await axios.get(`"https://user-event.azurewebsites.net/auth/getUsername/${userId}`);
+            const response = await axios.get(`https://main--easyticketlk.netlify.app/auth/getUsername/${userId}`);
             setUsername(response.data); // Adjust according to the actual response structure
             dispatch(loginSuccess(response.data)); // Pass user data to the state
             
