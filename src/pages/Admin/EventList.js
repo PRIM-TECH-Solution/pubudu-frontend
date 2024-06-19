@@ -1,249 +1,299 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Paper, Button } from '@material-ui/core';
-import { io } from 'socket.io-client';
+import {
+  Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+} from '@mui/material';
 
-const EventTable = () => {
-    const [events, setEvents] = useState([]);
-    const [filter, setFilter] = useState({
-        eventId: '',
-        organizerName: '',
-        organizerPhone: '',
-        organizerNic: '',
-        organizerEmail: '',
-        eventName: '',
-        eventDate: '',
-        eventTime: '',
-        eventLocation: '',
-        eventDescription: '',
-        ticketDetails: '',
-        eventCategory: '',
-        flyerLink: ''
-    });
+const EventList = () => {
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    eventId: '',
+    eventName: '',
+    eventDate: '',
+    eventLocation: '',
+    organizerName: '',
+  });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios.get('http://localhost:8080/eventcards/getAll');
-            setEvents(result.data);
-        };
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-        fetchData();
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/eventcards/getAll');
+      setEvents(response.data);
+      setFilteredEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
 
-        const socket = io('http://localhost:8080/ws');
-        socket.on('/topic/events', (updatedEvents) => {
-            setEvents(updatedEvents);
-        });
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+    filterEvents({ ...filters, [name]: value });
+  };
 
-        return () => socket.disconnect();
-    }, []);
-
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilter({
-            ...filter,
-            [name]: value
-        });
-    };
-
-    const filteredEvents = events.filter(event => {
-        return Object.keys(filter).every(key => 
-            (event[key] || '').toString().toLowerCase().includes(filter[key].toLowerCase())
-        );
-    });
-
-    const handleView = (event) => {
-        // Logic for viewing event details
-        alert(`Viewing details for Event ID: ${event.eventId}`);
-    };
-
-    const handleUpdate = (event) => {
-        // Logic for updating the event
-        alert(`Updating event with ID: ${event.eventId}`);
-    };
-
-    const handleDelete = async (event) => {
-        // Logic for deleting the event
-        await axios.delete(`http://localhost:8080/eventcards/${event.eventId}`);
-        setEvents(events.filter(e => e.eventId !== event.eventId));
-    };
-
-    return (
-        <div className="container mx-auto">
-            <TextField 
-                label="Filter by Event ID"
-                name="eventId"
-                value={filter.eventId}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Organizer Name"
-                name="organizerName"
-                value={filter.organizerName}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Organizer Phone"
-                name="organizerPhone"
-                value={filter.organizerPhone}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Organizer NIC"
-                name="organizerNic"
-                value={filter.organizerNic}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Organizer Email"
-                name="organizerEmail"
-                value={filter.organizerEmail}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Name"
-                name="eventName"
-                value={filter.eventName}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Date"
-                name="eventDate"
-                value={filter.eventDate}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Time"
-                name="eventTime"
-                value={filter.eventTime}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Location"
-                name="eventLocation"
-                value={filter.eventLocation}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Description"
-                name="eventDescription"
-                value={filter.eventDescription}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Ticket Details"
-                name="ticketDetails"
-                value={filter.ticketDetails}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Event Category"
-                name="eventCategory"
-                value={filter.eventCategory}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TextField 
-                label="Filter by Flyer Link"
-                name="flyerLink"
-                value={filter.flyerLink}
-                onChange={handleFilterChange}
-                variant="outlined"
-                margin="normal"
-            />
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow style={{ backgroundColor: 'black' }}>
-                            <TableCell style={{ color: 'white' }}>Event ID</TableCell>
-                            <TableCell style={{ color: 'white' }}>Organizer Name</TableCell>
-                            <TableCell style={{ color: 'white' }}>Organizer Phone</TableCell>
-                            <TableCell style={{ color: 'white' }}>Organizer NIC</TableCell>
-                            <TableCell style={{ color: 'white' }}>Organizer Email</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Name</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Date</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Time</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Location</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Description</TableCell>
-                            <TableCell style={{ color: 'white' }}>Ticket Details</TableCell>
-                            <TableCell style={{ color: 'white' }}>Event Category</TableCell>
-                            <TableCell style={{ color: 'white' }}>Flyer Link</TableCell>
-                            <TableCell style={{ color: 'white' }}>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredEvents.map((event) => (
-                            <TableRow key={event.eventId}>
-                                <TableCell>{event.eventId}</TableCell>
-                                <TableCell>{event.organizerName}</TableCell>
-                                <TableCell>{event.organizerPhone}</TableCell>
-                                <TableCell>{event.organizerNic}</TableCell>
-                                <TableCell>{event.organizerEmail}</TableCell>
-                                <TableCell>{event.eventName}</TableCell>
-                                <TableCell>{event.eventDate}</TableCell>
-                                <TableCell>{event.eventTime}</TableCell>
-                                <TableCell>{event.eventLocation}</TableCell>
-                                <TableCell>{event.eventDescription}</TableCell>
-                                <TableCell>{event.ticketDetails}</TableCell>
-                                <TableCell>{event.eventCategory}</TableCell>
-                                <TableCell>{event.flyerLink}</TableCell>
-                                <TableCell>
-                                    <Button 
-                                        variant="contained" 
-                                        color="primary" 
-                                        size="small" 
-                                        onClick={() => handleView(event)}
-                                        className="mr-2"
-                                    >
-                                        View
-                                    </Button>
-                                    <Button 
-                                        variant="contained" 
-                                        color="secondary" 
-                                        size="small" 
-                                        onClick={() => handleUpdate(event)}
-                                        className="mr-2"
-                                    >
-                                        Update
-                                    </Button>
-                                    <Button 
-                                        variant="contained" 
-                                        color="default" 
-                                        size="small" 
-                                        onClick={() => handleDelete(event)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+  const filterEvents = (filters) => {
+    const filtered = events.filter(event =>
+      event.eventId.toString().includes(filters.eventId) &&
+      event.eventName.toLowerCase().includes(filters.eventName.toLowerCase()) &&
+      event.eventDate.includes(filters.eventDate) &&
+      event.eventLocation.toLowerCase().includes(filters.eventLocation.toLowerCase()) &&
+      event.organizerName.toLowerCase().includes(filters.organizerName.toLowerCase())
     );
+    setFilteredEvents(filtered);
+  };
+
+  const handleViewClick = (event) => {
+    setSelectedEvent(event);
+    setIsViewOpen(true);
+  };
+
+  const handleEditClick = (event) => {
+    setSelectedEvent(event);
+    setIsEditOpen(true);
+  };
+
+  const handleDeleteClick = (eventId) => {
+    if (window.confirm('Are you sure you want to delete this event?')) {
+      deleteEvent(eventId);
+    }
+  };
+
+  const deleteEvent = async (eventId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:8080/eventcards/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      fetchEvents();
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  };
+
+  const handleEditSubmit = async (updatedEvent) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`http://localhost:8080/eventcards/${updatedEvent.eventId}`, updatedEvent, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setIsEditOpen(false);
+      fetchEvents();
+    } catch (error) {
+      console.error('Error updating event:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Event List</h2>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <TextField
+                  label="Event ID"
+                  name="eventId"
+                  value={filters.eventId}
+                  onChange={handleFilterChange}
+                  variant="standard"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  label="Event Name"
+                  name="eventName"
+                  value={filters.eventName}
+                  onChange={handleFilterChange}
+                  variant="standard"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  label="Event Date"
+                  name="eventDate"
+                  value={filters.eventDate}
+                  onChange={handleFilterChange}
+                  variant="standard"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  label="Event Location"
+                  name="eventLocation"
+                  value={filters.eventLocation}
+                  onChange={handleFilterChange}
+                  variant="standard"
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  label="Organizer Name"
+                  name="organizerName"
+                  value={filters.organizerName}
+                  onChange={handleFilterChange}
+                  variant="standard"
+                />
+              </TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredEvents.map(event => (
+              <TableRow key={event.eventId}>
+                <TableCell>{event.eventId}</TableCell>
+                <TableCell>{event.eventName}</TableCell>
+                <TableCell>{event.eventDate}</TableCell>
+                <TableCell>{event.eventLocation}</TableCell>
+                <TableCell>{event.organizerName}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleViewClick(event)}>View</Button>
+                  <Button onClick={() => handleEditClick(event)}>Edit</Button>
+                  <Button onClick={() => handleDeleteClick(event.eventId)}>Delete</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {selectedEvent && (
+        <Dialog open={isViewOpen} onClose={() => setIsViewOpen(false)}>
+          <DialogTitle>Event Details</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <img src={selectedEvent.flyerLink} alt="Event Flyer" />
+              <p>ID: {selectedEvent.eventId}</p>
+              <p>Name: {selectedEvent.eventName}</p>
+              <p>Date: {selectedEvent.eventDate}</p>
+              <p>Time: {selectedEvent.eventTime}</p>
+              <p>Location: {selectedEvent.eventLocation}</p>
+              <p>Description: {selectedEvent.eventDescription}</p>
+              <p>Organizer: {selectedEvent.organizerName}</p>
+              <p>Phone: {selectedEvent.organizerPhone}</p>
+              <p>Email: {selectedEvent.organizerEmail}</p>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsViewOpen(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+      {selectedEvent && (
+        <Dialog open={isEditOpen} onClose={() => setIsEditOpen(false)}>
+          <DialogTitle>Edit Event</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              label="Event ID"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventId}
+              disabled
+            />
+            <TextField
+              margin="dense"
+              label="Event Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventName}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, eventName: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Event Date"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventDate}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, eventDate: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Event Time"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventTime}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, eventTime: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Event Location"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventLocation}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, eventLocation: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Event Description"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.eventDescription}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, eventDescription: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Organizer Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.organizerName}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, organizerName: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Organizer Phone"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.organizerPhone}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, organizerPhone: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Organizer Email"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.organizerEmail}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, organizerEmail: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Flyer Link"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={selectedEvent.flyerLink}
+              onChange={(e) => setSelectedEvent({ ...selectedEvent, flyerLink: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsEditOpen(false)}>Cancel</Button>
+            <Button onClick={() => handleEditSubmit(selectedEvent)}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </div>
+  );
 };
 
-export default EventTable;
+export default EventList;
