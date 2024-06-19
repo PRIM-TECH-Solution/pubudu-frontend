@@ -26,7 +26,7 @@ export const orebiSlice = createSlice({
           state.products.push(action.payload);
         }
         // Dispatch a success toast
-        toast.success("Product added to cart");
+        toast.success("Event added successfully");
       }
     },
     increaseQuantity: (state, action) => {

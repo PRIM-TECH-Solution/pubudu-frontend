@@ -52,6 +52,7 @@ const BestSellers = () => {
               ticketType={event.ticketType}
               ticketPrice={event.ticketPrice}
               eventId={event.eventId}
+              date={event.eventDate}
               //badge={true}
             />
           </div>

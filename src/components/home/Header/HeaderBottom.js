@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
-import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { BsSuitHeartFill } from "react-icons/bs";
 
 const HeaderBottom = () => {
   const products = useSelector((state) => state.orebiReducer.products);
@@ -172,7 +171,7 @@ const HeaderBottom = () => {
               </div>
             )}
           </div>
-          <div className="flex gap-4 mt-2 lg:mt-0 items-center pr-6 cursor-pointer relative">
+          {/* <div className="flex gap-4 mt-2 lg:mt-0 items-center pr-6 cursor-pointer relative">
             <div onClick={() => setShowUser(!showUser)} className="flex">
               <FaUser />
               <FaCaretDown />
@@ -218,7 +217,7 @@ const HeaderBottom = () => {
                 </span>
               </div>
             </Link>
-          </div>
+          </div> */}
         </Flex>
       </div>
     </div>
