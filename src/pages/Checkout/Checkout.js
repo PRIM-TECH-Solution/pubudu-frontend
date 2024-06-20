@@ -153,7 +153,7 @@ const CheckoutPage = () => {
       console.log("Order Summary Data:", orderSummaryData);
 
       const orderSummaryResponse = await axios.post(
-        "http://localhost:8081/order-summary/order",
+        "https://easy-ticket-payment.azurewebsites.net/order-summary/order",
         orderSummaryData,
         {
           headers: {
@@ -166,7 +166,7 @@ const CheckoutPage = () => {
       console.log("Order summary created successfully:", orderSummaryResponse.data);
 
       const orderDetailsResponse = await axios.get(
-        `http://localhost:8081/order-summary/${orderId}`,
+        `https://easy-ticket-payment.azurewebsites.net/order-summary/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -184,8 +184,8 @@ const CheckoutPage = () => {
       const inputs = [
         { name: "merchant_id", value: merchantId },
         { name: "return_url", value: `https://main--easyticketlk.netlify.app/download` },
-        { name: "cancel_url", value: `https://main--easyticketlk.netlify.app/cancel/${orderId}?XscLNA=${orderId}&FCslDm=${hash}` },
-        { name: "notify_url", value: "https://user-event.azurewebsites.net/payment/notify" },
+        { name: "cancel_url", value: "https://main--easyticketlk.netlify.app" },
+        { name: "notify_url", value: "https://easy-ticket-payment.azurewebsites.net/order-summary/notify" },
         { name: "order_id", value: orderId },
         { name: "items", value: "Ticket Purchase" },
         { name: "currency", value: "LKR" },

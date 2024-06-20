@@ -36,7 +36,7 @@ const BookingSuccess = () => {
     if (orderId) {
       const fetchUserIdByOrderId = async () => {
         try {
-          const response = await axios.get(`http://localhost:8081/order-summary/user-id/${orderId}`);
+          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/user-id/${orderId}`);
           const fetchedUserId = String(response.data).trim();
 
           const token = localStorage.getItem("token");
@@ -63,7 +63,7 @@ const BookingSuccess = () => {
     if (isAuthorized && orderId) {
       const fetchOrderDetails = async () => {
         try {
-          const response = await axios.get(`http://localhost:8081/order-summary/success/${orderId}`, {
+          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/success/${orderId}`, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -99,7 +99,7 @@ const BookingSuccess = () => {
 
       const fetchTicketTypes = async () => {
         try {
-          const response = await axios.get(`http://localhost:8081/order-summary/ticket-types/${orderDetails.order_id}`, {
+          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`, {
             headers: {
               "Content-Type": "application/json",
             },
