@@ -183,7 +183,7 @@ const CheckoutPage = () => {
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
-        { name: "return_url", value: `https://main--easyticketlk.netlify.app/download` },
+        { name: "return_url", value: "https://main--easyticketlk.netlify.app/download" },
         { name: "cancel_url", value: "https://main--easyticketlk.netlify.app" },
         { name: "notify_url", value: "https://easy-ticket-payment.azurewebsites.net/order-summary/notify" },
         { name: "order_id", value: orderId },
