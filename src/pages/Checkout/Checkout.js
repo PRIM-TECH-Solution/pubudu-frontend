@@ -179,7 +179,7 @@ const CheckoutPage = () => {
 
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
-      payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
+      payHereForm.action = "https://www.payhere.lk/pay/checkout";
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
