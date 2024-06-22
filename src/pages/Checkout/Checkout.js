@@ -185,7 +185,7 @@ const CheckoutPage = () => {
         { name: "merchant_id", value: "1226200" },
         { name: "return_url", value: "https://main--easyticketlk.netlify.app/download" },
         { name: "cancel_url", value: "https://main--easyticketlk.netlify.app" },
-        { name: "notify_url", value: "https://easy-ticket-payment.azurewebsites.net/order-summary/notify" },
+        { name: "notify_url", value: "http://localhost:3000/" },
         { name: "order_id", value: "17190817529831700" },
         { name: "items", value: "Ticket Purchase" },
         { name: "currency", value: "LKR" },
