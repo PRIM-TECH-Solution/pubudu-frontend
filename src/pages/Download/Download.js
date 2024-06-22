@@ -118,7 +118,7 @@ const BookingSuccess = () => {
 
   const downloadETicket = async () => {
     try {
-      const response = await axios.get(`http://localhost:8082/api/downloadQR/${orderId}`, {
+      const response = await axios.get(`https://easyticketqr.azurewebsites.net/api/downloadQR/${orderId}`, {
         responseType: "blob",
       });
 
@@ -205,7 +205,7 @@ const BookingSuccess = () => {
             <span className="font-bold">Order ID:</span> {orderDetails.order_id}
           </p>
           <p>
-            <span className="font-bold">Amount:</span> LKR {orderDetails.amount}
+            <span className="font-bold">Amount:</span> {orderDetails.amount} LKR
           </p>
           <p>
             <span className="font-bold">Status:</span> {orderDetails.status}
