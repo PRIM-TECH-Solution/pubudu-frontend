@@ -182,11 +182,11 @@ const CheckoutPage = () => {
       payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
 
       const inputs = [
-        { name: "merchant_id", value: "1226200" },
+        { name: "merchant_id", value: merchantId },
         { name: "return_url", value: "https://main--easyticketlk.netlify.app/download" },
         { name: "cancel_url", value: "https://main--easyticketlk.netlify.app" },
-        { name: "notify_url", value: "http://localhost:3000/" },
-        { name: "order_id", value: "17190817529831700" },
+        { name: "notify_url", value: "https://easy-ticket-payment.azurewebsites.net/order-summary/notify" },
+        { name: "order_id", value: orderId },
         { name: "items", value: "Ticket Purchase" },
         { name: "currency", value: "LKR" },
         { name: "amount", value: totalSubtotal },
@@ -197,7 +197,7 @@ const CheckoutPage = () => {
         { name: "address", value: userDetails.city },
         { name: "city", value: userDetails.city },
         { name: "country", value: userDetails.country },
-        { name: "hash", value: "B6644D6AB609AB27FBF0BACDD66D2D44" },
+        { name: "hash", value: hash },
         { name: "NIC", value: userDetails.nic },
       ];
 
