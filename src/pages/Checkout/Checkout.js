@@ -177,9 +177,13 @@ const CheckoutPage = () => {
       const orderDetails = orderDetailsResponse.data;
       const { merchantId, hash } = orderDetails;
 
+      const payHereCheckoutUrl = process.env.REACT_APP_PAYHERE_CHECKOUT_URL || "https://sandbox.payhere.lk/pay/checkout";
+
+// Setting the form action URL dynamically
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
-      payHereForm.action = "https://sandbox.payhere.lk/pay/checkout";
+      payHereForm.action = payHereCheckoutUrl;
+
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
