@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const EmailPopup = ({ orderDetails, eventDetails, ticketTypes, onClose }) => {
+const EmailPopup = ({ orderDetails, eventDetails, ticketTypes, onClose ,onEmailSent}) => {
   const [email, setEmail] = useState(orderDetails.email);
   const [isEditing, setIsEditing] = useState(false);
   const [newEmail, setNewEmail] = useState(email);
@@ -31,6 +31,7 @@ const EmailPopup = ({ orderDetails, eventDetails, ticketTypes, onClose }) => {
       setTimeout(async () => {
         try {
           await axios.post(`https://easyticketqr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
+          onEmailSent();
           onClose();
         } catch (error) {
           console.error("Error generating QR and sending email:", error);

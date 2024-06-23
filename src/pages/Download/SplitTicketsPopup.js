@@ -1,42 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const SplitTicketsPopup = ({ orderDetails, ticketTypes, onClose }) => {
-  const [emailTickets, setEmailTickets] = useState(
-    ticketTypes.map((ticket) => ({ ticketId: ticket.ticketId, ticketType: ticket.ticketType, email: "" }))
-  );
+const SplitTicketsPopup = ({ orderDetails, eventDetails, onClose , onSplitTicketsSent }) => {
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [emailTickets, setEmailTickets] = useState([]);
   const [sendingStatus, setSendingStatus] = useState({});
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
 
-  const handleChange = (ticketId, value) => {
-    setEmailTickets((prevTickets) =>
-      prevTickets.map((ticket) => (ticket.ticketId === ticketId ? { ...ticket, email: value } : ticket))
+  useEffect(() => {
+    const fetchTicketTypes = async () => {
+      try {
+        const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`);
+        const ticketTypesData = response.data.map((type, index) => ({ id: index, ticketType: type.toUpperCase() }));
+        setTicketTypes(ticketTypesData);
+        setEmailTickets(ticketTypesData.map(ticket => ({ ...ticket, email: "" })));
+      } catch (error) {
+        console.error("Error fetching ticket types:", error);
+      }
+    };
+
+    fetchTicketTypes();
+  }, [orderDetails.order_id]);
+
+  const handleChange = (id, value) => {
+    setEmailTickets(prevTickets =>
+      prevTickets.map(ticket =>
+        ticket.id === id ? { ...ticket, email: value } : ticket
+      )
     );
   };
 
-  const handleSend = async (ticketId, email) => {
-    setSendingStatus((prevStatus) => ({ ...prevStatus, [ticketId]: "sending" }));
+  const handleSendAll = async () => {
+    setIsSending(true);
+    setSendingStatus(
+      emailTickets.reduce((acc, ticket) => {
+        acc[ticket.id] = "sending";
+        return acc;
+      }, {})
+    );
+
+    const ticketsData = emailTickets.map(ticket => ({
+      orderId: orderDetails.order_id,
+      ticketType: ticket.ticketType,
+      nic: orderDetails.nic,
+      eventName: eventDetails.eventName,
+      eventDate: eventDetails.eventDate,
+      eventTime: eventDetails.eventTime,
+      email: ticket.email,
+      amount: orderDetails.amount,
+    }));
 
     try {
-      await axios.post("http://localhost:8082/api/splitTickets", {
-        orderId: orderDetails.order_id,
-        emailTickets: [{ ticketId, email }],
-      });
+      await axios.post("https://easyticketqr.azurewebsites.net/tickets/create", ticketsData);
+      await axios.post(`https://easyticketqr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
 
-      setSendingStatus((prevStatus) => ({ ...prevStatus, [ticketId]: "sent" }));
+      setSendingStatus(
+        emailTickets.reduce((acc, ticket) => {
+          acc[ticket.id] = "sent";
+          return acc;
+        }, {})
+      );
+      setIsSent(true);
+      onSplitTicketsSent();
     } catch (error) {
-      setSendingStatus((prevStatus) => ({ ...prevStatus, [ticketId]: "failed" }));
-    }
-  };
-
-  const getTicketTypeById = async (ticketId) => {
-    try {
-      const response = await axios.get(`http://localhost:8082/api/tickets/${ticketId}`);
-      const ticket = response.data;
-
-      alert(`Ticket Type: ${ticket.ticketType}\nTicket ID: ${ticket.ticketId}\nEvent: ${ticket.eventName}\nDate: ${ticket.eventDate}\nTime: ${ticket.eventTime}`);
-    } catch (error) {
-      console.error("Error fetching ticket type:", error);
-      alert("Failed to fetch ticket type. Please try again later.");
+      setSendingStatus(
+        emailTickets.reduce((acc, ticket) => {
+          acc[ticket.id] = "failed";
+          return acc;
+        }, {})
+      );
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -45,33 +80,26 @@ const SplitTicketsPopup = ({ orderDetails, ticketTypes, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Split Tickets</h2>
         <p className="mb-4">You have ordered {ticketTypes.length} tickets. Split them here:</p>
-        {emailTickets.map((ticket) => (
-          <div key={ticket.ticketId} className="mb-4">
-            <p className="mb-2">
-              {ticket.ticketType} - Ticket ID: {ticket.ticketId}
-              <button
-                onClick={() => getTicketTypeById(ticket.ticketId)}
-                className="ml-4 text-blue-500 underline"
-              >
-                View Details
-              </button>
-            </p>
+        {emailTickets.map((ticket, index) => (
+          <div key={index} className="mb-4">
+            <p className="mb-2">{ticket.ticketType}</p>
             <input
               type="email"
               placeholder="Enter email"
               value={ticket.email}
-              onChange={(e) => handleChange(ticket.ticketId, e.target.value)}
+              onChange={(e) => handleChange(ticket.id, e.target.value)}
               className="border p-2 rounded w-full"
+              readOnly={isSent}
             />
-            <button
-              onClick={() => handleSend(ticket.ticketId, ticket.email)}
-              disabled={!ticket.email || sendingStatus[ticket.ticketId] === "sending" || sendingStatus[ticket.ticketId] === "sent"}
-              className={`w-full mt-2 py-2 px-4 rounded ${ticket.email ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"} text-white font-bold`}
-            >
-              {sendingStatus[ticket.ticketId] === "sending" ? "Sending..." : sendingStatus[ticket.ticketId] === "sent" ? "Sent" : "Send"}
-            </button>
           </div>
         ))}
+        <button
+          onClick={handleSendAll}
+          disabled={isSending || isSent}
+          className={`w-full mt-4 py-2 px-4 rounded ${isSending || isSent ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold`}
+        >
+          {isSending ? "Sending..." : isSent ? "Sent" : "Send All"}
+        </button>
         <button
           onClick={onClose}
           className="w-full mt-4 py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white font-bold"

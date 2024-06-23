@@ -4,8 +4,8 @@ import { FaCheckCircle } from "react-icons/fa";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import axios from "axios";
 import EmailPopup from "./EmailPopup";
-import SplitTicketsPopup from "./SplitTicketsPopup";
-import {jwtDecode} from "jwt-decode";
+import SplitTicketsPopup from "./SplitTicketPopup";
+import {jwtDecode} from "jwt-decode"; // Ensure this import is correct if using jwt-decode
 
 const BookingSuccess = () => {
   const navigate = useNavigate();
@@ -17,6 +17,10 @@ const BookingSuccess = () => {
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [showSplitTicketsPopup, setShowSplitTicketsPopup] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isSplitTicketsSent, setIsSplitTicketsSent] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  
+
 
   useEffect(() => {
     const fetchOrderId = () => {
@@ -47,7 +51,7 @@ const BookingSuccess = () => {
             setIsAuthorized(true);
           } else {
             setIsAuthorized(false);
-            navigate("/"); 
+            navigate("/");
             console.error("Unauthorized access");
           }
         } catch (error) {
@@ -84,7 +88,7 @@ const BookingSuccess = () => {
       const fetchEventDetails = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await axios.get(`https://user-event.azurewebsites.net/eventcards/${orderDetails.event_id}`, {
+          const response = await axios.get(`https://user-event.azurewebsites.net/${orderDetails.event_id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -159,20 +163,24 @@ const BookingSuccess = () => {
         <div className="w-full md:w-1/2 flex flex-col items-center space-y-4">
           <button
             onClick={downloadETicket}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            disabled={!isEmailSent && !isSplitTicketsSent}
+            className={`w-full font-bold py-2 px-4 rounded ${isEmailSent || isSplitTicketsSent ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-gray-700"}`}
           >
             Download Ticket
           </button>
           <button
             onClick={() => setShowEmailPopup(true)}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+            className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded ${isEmailSent || isSplitTicketsSent  ? "bg-gray-400 text-gray-700" : ""}`}
+            disabled={isEmailSent || isSplitTicketsSent}
+            
           >
             Email
           </button>
           {ticketTypes.length > 1 && ticketTypes.length <= 10 && (
             <button
               onClick={() => setShowSplitTicketsPopup(true)}
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+              className={`w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded ${isEmailSent || isSplitTicketsSent ? "bg-gray-400 text-gray-700" : ""}`}
+              disabled={isSplitTicketsSent || isEmailSent}
             >
               Split Tickets
             </button>
@@ -205,7 +213,7 @@ const BookingSuccess = () => {
             <span className="font-bold">Order ID:</span> {orderDetails.order_id}
           </p>
           <p>
-            <span className="font-bold">Amount:</span> {orderDetails.amount} LKR
+            <span className="font-bold">Amount:</span> LKR {orderDetails.amount}
           </p>
           <p>
             <span className="font-bold">Status:</span> {orderDetails.status}
@@ -237,6 +245,9 @@ const BookingSuccess = () => {
           eventDetails={eventDetails}
           ticketTypes={ticketTypes}
           onClose={() => setShowEmailPopup(false)}
+          orderId={orderDetails.order_id}
+          onEmailSent={() => setIsEmailSent(true)}
+          
         />
       )}
 
@@ -244,7 +255,12 @@ const BookingSuccess = () => {
         <SplitTicketsPopup
           orderDetails={orderDetails}
           ticketTypes={ticketTypes}
+          eventDetails={eventDetails}
           onClose={() => setShowSplitTicketsPopup(false)}
+          orderId={orderDetails.order_id}
+          onSplitTicketsSent={() => setIsSplitTicketsSent(true)}
+          
+          
         />
       )}
     </div>
