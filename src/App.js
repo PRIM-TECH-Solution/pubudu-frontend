@@ -76,11 +76,11 @@ const Layout = () => (
 );
 
 const AdminRoute = ({ element }) => {
-  return isAdmin ? element : <Navigate to="/admindashboard" />;
+  return isAdmin ? element : <Navigate to="/signin" />;
 };
 
 const UserRoute = ({ element }) => {
-  return isUser ? element : <Navigate to="/" />;
+  return isUser ? element : <Navigate to="/signin" />;
 };
 
 const router = createBrowserRouter(
@@ -96,6 +96,7 @@ const router = createBrowserRouter(
 
         <Route path="/checkout" element={<UserRoute element={<Checkout />} />} />
         <Route path="/download" element={<UserRoute element={<Download />} />} />
+        <Route path="/profile" element={<UserRoute element={<ProfilePage />} />} />
         <Route path="/cart" element={<Cart />} />
 
         

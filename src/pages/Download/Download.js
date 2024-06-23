@@ -7,7 +7,7 @@ import EmailPopup from "./EmailPopup";
 import SplitTicketsPopup from "./SplitTicketsPopup";
 import {jwtDecode} from "jwt-decode"; // Ensure this import is correct if using jwt-decode
 
-const BookingSuccess = () => {
+const Download = () => {
   const navigate = useNavigate();
   const [orderId, setOrderId] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
@@ -267,4 +267,4 @@ const BookingSuccess = () => {
   );
 };
 
-export default BookingSuccess;
+export default Download;
