@@ -4,7 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import axios from "axios";
 import EmailPopup from "./EmailPopup";
-import SplitTicketsPopup from "./SplitTicketPopup";
+import SplitTicketsPopup from "./SplitTicketsPopup";
 import {jwtDecode} from "jwt-decode"; // Ensure this import is correct if using jwt-decode
 
 const BookingSuccess = () => {
