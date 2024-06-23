@@ -32,7 +32,9 @@ import MainComponent from "./components/home/Products/MainComponent";
 import CreateEvent from "./pages/Admin/CreateEvent";
 import EventList from "./pages/Admin/EventList";
 import AdminPanel from "./pages/Admin/AdminPanel";
+import ProfilePage from "./pages/Account/Profile";
 import Services from "./pages/Admin/Services";
+
 import {jwtDecode} from "jwt-decode";  // Correct import
 
 const token = localStorage.getItem('token');
