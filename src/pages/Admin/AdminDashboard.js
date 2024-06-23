@@ -28,9 +28,9 @@ const AdminDashboard = () => {
               Event List
             </div>
           </Link>
-          <Link to="/services">
+          <Link to="/contactlist">
             <div className="bg-orange-500 text-white p-6 rounded-lg shadow-md flex items-center justify-center h-24">
-              Services
+              Contact List
             </div>
           </Link>
         </div>

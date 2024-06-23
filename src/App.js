@@ -33,7 +33,7 @@ import CreateEvent from "./pages/Admin/CreateEvent";
 import EventList from "./pages/Admin/EventList";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import ProfilePage from "./pages/Account/Profile";
-import Services from "./pages/Admin/Services";
+import ContactList from "./pages/Admin/ContactList";
 
 import {jwtDecode} from "jwt-decode";  // Correct import
 
@@ -116,7 +116,7 @@ const router = createBrowserRouter(
       <Route path="/adminpanel" element={<AdminRoute element={<AdminPanel />} />} />
       <Route path="/eventcreation" element={<AdminRoute element={<CreateEvent />} />} />
       <Route path="/eventlist" element={<AdminRoute element={<EventList />} />} />
-      <Route path="/services" element={<AdminRoute element={<Services />} />} />
+      <Route path="/contactlist" element={<AdminRoute element={<ContactList />} />} />
     </Route>
   )
 );
