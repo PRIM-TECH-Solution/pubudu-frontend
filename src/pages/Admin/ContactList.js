@@ -17,7 +17,7 @@ const ContactTable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.get("https://user-event.azurewebsites.net/contact/getAll");
+                const result = await axios.get("https://easyticket-event-user.azurewebsites.net/contact/getAll");
                 setContacts(result.data);
             } catch (error) {
                 console.error("Error fetching contacts:", error);

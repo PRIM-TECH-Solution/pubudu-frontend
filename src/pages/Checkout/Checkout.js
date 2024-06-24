@@ -45,7 +45,7 @@ const CheckoutPage = () => {
         }
 
         const userId = decodedToken.user_id;
-        const response = await axios.get(`https://user-event.azurewebsites.net/auth/getUser/${userId}`, {
+        const response = await axios.get(`https://easyticket-event-user.azurewebsites.net/auth/getUser/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -223,7 +223,7 @@ const CheckoutPage = () => {
         paymentStatus: "PAID",
       };
 
-      const orderResponse = await axios.post("https://user-event.azurewebsites.net/orders/add", orderData, {
+      const orderResponse = await axios.post("https://easyticket-event-user.azurewebsites.net/orders/add", orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

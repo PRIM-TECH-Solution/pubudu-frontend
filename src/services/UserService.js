@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const USER_API_BASE_URL1="https://user-event.azurewebsites.net/auth/addUser"
+const USER_API_BASE_URL1="https://easyticket-event-user.azurewebsites.net/auth/addUser"
 class UserService{
     saveUser(user){
         return axios.post(
