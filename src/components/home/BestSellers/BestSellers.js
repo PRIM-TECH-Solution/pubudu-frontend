@@ -8,7 +8,7 @@ const BestSellers = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get("https://easyticket-event-user.azurewebsites.net/eventcards/getAll");
+      const response = await axios.get("https://user-event-web.azurewebsites.net/eventcards/getAll");
       if (response.data != null) {
         const event = response.data.map((e) => ({
           eventName: e.eventName,

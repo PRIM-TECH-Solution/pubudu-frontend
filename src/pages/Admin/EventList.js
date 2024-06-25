@@ -24,7 +24,7 @@ const EventList = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('https://easyticket-event-user.azurewebsites.net/eventcards/getAll');
+      const response = await axios.get('https://user-event-web.azurewebsites.net/eventcards/getAll');
       setEvents(response.data);
       setFilteredEvents(response.data);
     } catch (error) {
@@ -68,7 +68,7 @@ const EventList = () => {
   const deleteEvent = async (eventId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://easyticket-event-user.azurewebsites.net/eventcards/${eventId}`, {
+      await axios.delete(`https://user-event-web.azurewebsites.net/eventcards/${eventId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -82,7 +82,7 @@ const EventList = () => {
   const handleEditSubmit = async (updatedEvent) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://easyticket-event-user.azurewebsites.net/eventcards/${updatedEvent.eventId}`, updatedEvent, {
+      await axios.put(`https://user-event-web.azurewebsites.net/eventcards/${updatedEvent.eventId}`, updatedEvent, {
         headers: {
           Authorization: `Bearer ${token}`
         }

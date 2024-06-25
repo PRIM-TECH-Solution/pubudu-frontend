@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const USER_API_BASE_URL="https://easyticket-event-user.azurewebsites.net/auth/login"
+const USER_API_BASE_URL="https://user-event-web.azurewebsites.net/auth/login"
 class LogService{
     logUser(user){
         return axios.post(

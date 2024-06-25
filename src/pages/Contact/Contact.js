@@ -85,7 +85,7 @@ const Contact = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await axios.post("https://easyticket-event-user.azurewebsites.net/contact/add", contact);
+        const response = await axios.post("https://user-event-web.azurewebsites.net/contact/add", contact);
         if (response.status === 200) {
           setSuccessMsg(
             `Thank you dear ${contact.contactName}, Your message has been received successfully. Further details will be sent to you by email at ${contact.contactEmail}.`

@@ -12,7 +12,7 @@ const NewArrivals = () => {
 
   const getData = useCallback(async () => {
     // Change the API endpoint for retrieving the recent events
-    const responce = await axios.get("https://easyticket-event-user.azurewebsites.net/eventcards/getAll");
+    const responce = await axios.get("https://user-event-web.azurewebsites.net/eventcards/getAll");
     setResponce(responce.data);
     console.log(responces.length);
     if (responce.data != null) {

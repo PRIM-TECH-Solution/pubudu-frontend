@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const USER_API_BASE_URL1 = "https://easyticket-event-user.azurewebsites.net/eventcards/add";
+const USER_API_BASE_URL1 = "https://user-event-web.azurewebsites.net/eventcards/add";
 
 const addEvent = async (eventData) => {
     const token = localStorage.getItem('token');

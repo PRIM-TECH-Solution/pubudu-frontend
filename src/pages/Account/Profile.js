@@ -42,7 +42,7 @@ const ProfilePage = () => {
 
       try {
         const userId = decodedToken.user_id;
-        const response = await axios.get(`https://easyticket-event-user.azurewebsites.net/auth/getUser/${userId}`, {
+        const response = await axios.get(`https://user-event-web.azurewebsites.net/auth/getUser/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -68,7 +68,7 @@ const ProfilePage = () => {
   }, []);
   const handleDelete = async (user) => {
     // Logic for deleting the event
-    await axios.delete(`https://easyticket-event-user.azurewebsites.net/auth/${user.userId}`);
+    await axios.delete(`https://user-event-web.azurewebsites.net/auth/${user.userId}`);
     setUsers(users.filter(e => e.userId !== user.userId));
 };
 
