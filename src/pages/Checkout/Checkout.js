@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import paymentCard from "../../assets/images/payment.png";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Correct import if jwtDecode is not a default export
+import { jwtDecode } from "jwt-decode"; // Correct import if jwtDecode is not a default export
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,6 +12,7 @@ const CheckoutPage = () => {
   const { eventId, selectedTickets, ticketDetails } = location.state || {};
   const navigate = useNavigate();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const [userDetails, setUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -115,6 +116,8 @@ const CheckoutPage = () => {
       return;
     }
 
+    setIsLoading(true); // Set loading state to true when order submission starts
+
     try {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -124,6 +127,7 @@ const CheckoutPage = () => {
         toast.error("Your session has timed out, please log in again.");
         localStorage.removeItem("token");
         setTimeout(() => navigate("/signin"), 3000);
+        setIsLoading(false); // Reset loading state if token has expired
         return;
       }
 
@@ -148,7 +152,7 @@ const CheckoutPage = () => {
         country: userDetails.country,
         event_id: eventId.toString(),
         status: "PENDING",
-        ticketTypes: ticketTypesArray
+        ticketTypes: ticketTypesArray,
       };
       console.log("Order Summary Data:", orderSummaryData);
 
@@ -179,11 +183,10 @@ const CheckoutPage = () => {
 
       const payHereCheckoutUrl = process.env.REACT_APP_PAYHERE_CHECKOUT_URL || "https://sandbox.payhere.lk/pay/checkout";
 
-// Setting the form action URL dynamically
+      // Setting the form action URL dynamically
       const payHereForm = document.createElement("form");
       payHereForm.method = "POST";
       payHereForm.action = payHereCheckoutUrl;
-
 
       const inputs = [
         { name: "merchant_id", value: merchantId },
@@ -236,6 +239,8 @@ const CheckoutPage = () => {
     } catch (error) {
       console.error("Error during order submission:", error);
       navigate("/checkout", { state: { error: error.message } });
+    } finally {
+      setIsLoading(false); // Reset loading state after order submission completes
     }
   };
 
@@ -291,10 +296,10 @@ const CheckoutPage = () => {
           </div>
           <button
             onClick={handleOrderSubmit}
-            className="mt-4 w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            disabled={!agreedToTerms}
+            className={`mt-4 w-full p-2 rounded ${isLoading ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+            disabled={!agreedToTerms || isLoading}
           >
-            Place Order
+            {isLoading ? 'Processing...' : 'Place Order'}
           </button>
           <button
             onClick={handleBack}
