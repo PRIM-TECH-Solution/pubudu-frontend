@@ -40,7 +40,7 @@ const Download = () => {
     if (orderId) {
       const fetchUserIdByOrderId = async () => {
         try {
-          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/user-id/${orderId}`);
+          const response = await axios.get(`https://easyticket-payment.azurewebsites.net/order-summary/user-id/${orderId}`);
           const fetchedUserId = String(response.data).trim();
 
           const token = localStorage.getItem("token");
@@ -67,7 +67,7 @@ const Download = () => {
     if (isAuthorized && orderId) {
       const fetchOrderDetails = async () => {
         try {
-          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/success/${orderId}`, {
+          const response = await axios.get(`https://easyticket-payment.azurewebsites.net/order-summary/success/${orderId}`, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -103,7 +103,7 @@ const Download = () => {
 
       const fetchTicketTypes = async () => {
         try {
-          const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`, {
+          const response = await axios.get(`https://easyticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -122,7 +122,7 @@ const Download = () => {
 
   const downloadETicket = async () => {
     try {
-      const response = await axios.get(`https://easyticketqr.azurewebsites.net/api/downloadQR/${orderId}`, {
+      const response = await axios.get(`https://easyticket-qr.azurewebsites.net/api/downloadQR/${orderId}`, {
         responseType: "blob",
       });
 

@@ -22,7 +22,7 @@ const EmailPopup = ({ orderDetails, eventDetails, ticketTypes, onClose ,onEmailS
     }));
 
     try {
-      await axios.post("https://easyticketqr.azurewebsites.net/tickets/create", requestBody, {
+      await axios.post("https://easyticket-qr.azurewebsites.net/tickets/create", requestBody, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -30,7 +30,7 @@ const EmailPopup = ({ orderDetails, eventDetails, ticketTypes, onClose ,onEmailS
 
       setTimeout(async () => {
         try {
-          await axios.post(`https://easyticketqr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
+          await axios.post(`https://easyticket-qr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
           onEmailSent();
           onClose();
         } catch (error) {

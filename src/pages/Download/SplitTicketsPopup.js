@@ -11,7 +11,7 @@ const SplitTicketsPopup = ({ orderDetails, eventDetails, onClose , onSplitTicket
   useEffect(() => {
     const fetchTicketTypes = async () => {
       try {
-        const response = await axios.get(`https://easy-ticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`);
+        const response = await axios.get(`https://easyticket-payment.azurewebsites.net/order-summary/ticket-types/${orderDetails.order_id}`);
         const ticketTypesData = response.data.map((type, index) => ({ id: index, ticketType: type.toUpperCase() }));
         setTicketTypes(ticketTypesData);
         setEmailTickets(ticketTypesData.map(ticket => ({ ...ticket, email: "" })));
@@ -52,8 +52,8 @@ const SplitTicketsPopup = ({ orderDetails, eventDetails, onClose , onSplitTicket
     }));
 
     try {
-      await axios.post("https://easyticketqr.azurewebsites.net/tickets/create", ticketsData);
-      await axios.post(`https://easyticketqr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
+      await axios.post("https://easyticket-qr.azurewebsites.net/tickets/create", ticketsData);
+      await axios.post(`https://easyticket-qr.azurewebsites.net/api/generateQRAndSendEmail/${orderDetails.order_id}`);
 
       setSendingStatus(
         emailTickets.reduce((acc, ticket) => {
